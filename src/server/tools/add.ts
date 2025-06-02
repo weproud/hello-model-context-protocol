@@ -1,5 +1,8 @@
-import { z } from 'zod';
-import { AddToolSchema, type AddToolInput } from '@/schemas';
+import {
+  AddToolSchema,
+  type AddToolInput,
+  type AddToolResponse,
+} from '@/schemas';
 import { Logger } from '@/lib/fetch';
 
 /**
@@ -9,9 +12,7 @@ export const addTool = {
   name: 'add',
   description: '두 숫자를 더합니다',
   inputSchema: AddToolSchema,
-  handler: async (
-    args: unknown
-  ): Promise<{ result: number; calculation: string }> => {
+  handler: async (args: unknown): Promise<AddToolResponse> => {
     try {
       // 입력 유효성 검사
       const { a, b } = AddToolSchema.parse(args) as AddToolInput;
@@ -43,6 +44,6 @@ export const addTool = {
 export async function addNumbers(
   a: number,
   b: number
-): Promise<{ result: number; calculation: string }> {
+): Promise<AddToolResponse> {
   return addTool.handler({ a, b });
 }

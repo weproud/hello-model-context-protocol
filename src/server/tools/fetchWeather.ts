@@ -67,7 +67,7 @@ export async function fetchRealWeather(
   location: string,
   units: 'celsius' | 'fahrenheit' = 'celsius'
 ): Promise<WeatherResponse> {
-  const apiKey = process.env.OPENWEATHER_API_KEY;
+  const apiKey = process.env['OPENWEATHER_API_KEY'];
 
   if (!apiKey) {
     Logger.warn('OpenWeather API 키가 설정되지 않음, 모의 데이터 반환');

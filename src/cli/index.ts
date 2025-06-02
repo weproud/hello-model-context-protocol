@@ -1,31 +1,37 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { createAddCommand, showAddExamples } from './commands/add.js';
-import { createFetchWeatherCommand, showFetchWeatherExamples } from './commands/fetchWeather.js';
+import { createAddCommand, showAddExamples } from './commands/add';
+import {
+  createFetchWeatherCommand,
+  showFetchWeatherExamples,
+} from './commands/fetchWeather';
 
 /**
  * MCP CLI 도구 메인 프로그램
  */
 function createCLI(): Command {
   const program = new Command();
-  
+
   program
     .name('mcp-tool')
     .description('Model Context Protocol (MCP) 서버 도구들을 위한 CLI')
     .version('1.0.0');
-  
+
   // Add 명령 추가
   program.addCommand(createAddCommand());
-  
+
   // FetchWeather 명령 추가
   program.addCommand(createFetchWeatherCommand());
-  
+
   // Examples 명령 추가
   const examplesCommand = new Command('examples');
   examplesCommand
     .description('사용 예시를 보여줍니다')
-    .option('-c, --command <command>', '특정 명령의 예시만 표시 (add|fetch-weather)')
+    .option(
+      '-c, --command <command>',
+      '특정 명령의 예시만 표시 (add|fetch-weather)'
+    )
     .action((options: { command?: string }) => {
       if (options.command) {
         switch (options.command) {
@@ -49,9 +55,9 @@ function createCLI(): Command {
         console.log('예: mcp-tool add --help');
       }
     });
-  
+
   program.addCommand(examplesCommand);
-  
+
   // 도움말 개선
   program.on('--help', () => {
     console.log('');
@@ -63,7 +69,7 @@ function createCLI(): Command {
     console.log('더 많은 예시를 보려면:');
     console.log('  $ mcp-tool examples');
   });
-  
+
   return program;
 }
 
@@ -72,7 +78,7 @@ function createCLI(): Command {
  */
 async function main(): Promise<void> {
   const program = createCLI();
-  
+
   try {
     await program.parseAsync(process.argv);
   } catch (error) {
@@ -84,7 +90,7 @@ async function main(): Promise<void> {
 
 // 스크립트가 직접 실행될 때만 main 함수 호출
 if (require.main === module) {
-  main().catch((error) => {
+  main().catch(error => {
     console.error('❌ 예상치 못한 오류:', error);
     process.exit(1);
   });

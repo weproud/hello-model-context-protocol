@@ -2,10 +2,8 @@
   "name": "hello-model-context-protocol",
   "version": "1.0.0",
   "description": "Model Context Protocol (MCP) 서버 및 CLI 도구 개발 프로젝트",
-  "main": "index.js",
-  "directories": {
-    "test": "tests"
-  },
+  "type": "module",
+  "main": "dist/server/index.js",
   "bin": {
     "mcp-tool": "dist/cli/index.js"
   },
@@ -15,7 +13,6 @@
     "start": "node dist/server/index.js",
     "cli": "tsx src/cli/index.ts",
     "test": "vitest",
-    "test:e2e": "playwright test",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "format": "prettier --write src/**/*.ts",
@@ -35,7 +32,6 @@
   ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/weproud/hello-model-context-protocol/issues"
   },

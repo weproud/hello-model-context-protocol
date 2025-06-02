@@ -2,11 +2,8 @@
 
 import { FastMCP } from 'fastmcp';
 import { Logger } from '@/lib/fetch';
-import {
-  AddToolSchema,
-  FetchWeatherSchema,
-  type WeatherResponse,
-} from '@/schemas';
+import { AddToolSchema, FetchWeatherSchema } from '@/schemas';
+import { executeAddTool, executeFetchWeatherTool } from '@/lib/tools';
 
 /**
  * FastMCP를 사용한 MCP 서버 생성
@@ -26,15 +23,12 @@ function createMCPServer(): FastMCP {
       try {
         Logger.info('Add 도구 실행', args);
 
-        const result = args.a + args.b;
-        const calculation = `${args.a} + ${args.b} = ${result}`;
+        // 공통 비즈니스 로직 사용
+        const result = executeAddTool(args);
 
-        Logger.info('Add 도구 완료', { result, calculation });
+        Logger.info('Add 도구 완료', { result });
 
-        return JSON.stringify({
-          result,
-          calculation,
-        });
+        return JSON.stringify(result);
       } catch (error) {
         Logger.error('Add 도구 실행 중 오류 발생', {
           error: error instanceof Error ? error.message : String(error),
@@ -53,18 +47,12 @@ function createMCPServer(): FastMCP {
       try {
         Logger.info('FetchWeather 도구 실행', args);
 
-        // 모의 날씨 데이터 생성
-        const mockWeatherData: WeatherResponse = {
-          location: args.location,
-          temperature: args.units === 'celsius' ? 22 : 72,
-          description: '맑음',
-          humidity: 65,
-          units: args.units || 'celsius',
-        };
+        // 공통 비즈니스 로직 사용
+        const result = executeFetchWeatherTool(args);
 
-        Logger.info('FetchWeather 도구 완료', { weather: mockWeatherData });
+        Logger.info('FetchWeather 도구 완료', { weather: result });
 
-        return JSON.stringify(mockWeatherData);
+        return JSON.stringify(result);
       } catch (error) {
         Logger.error('FetchWeather 도구 실행 중 오류 발생', {
           error: error instanceof Error ? error.message : String(error),

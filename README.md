@@ -68,13 +68,17 @@ hello-model-context-protocol/
 │   │   ├── add.ts               # Add 도구 스키마
 │   │   ├── fetchWeather.ts      # FetchWeather 도구 스키마
 │   │   └── index.ts             # 모든 스키마 export
+│   ├── lib/                     # 공유 유틸리티 및 비즈니스 로직
+│   │   ├── tools/               # 🆕 공통 비즈니스 로직
+│   │   │   ├── add.ts           # Add 도구 핵심 로직
+│   │   │   ├── weather.ts       # Weather 도구 핵심 로직
+│   │   │   └── index.ts         # 모든 도구 로직 export
+│   │   └── fetch.ts             # API 호출용 fetch 유틸리티
 │   ├── cli/                     # CLI 로직
 │   │   ├── commands/            # CLI 명령 핸들러
 │   │   │   ├── add.ts           # add 도구용 CLI 명령
 │   │   │   └── fetchWeather.ts  # fetchWeather 도구용 CLI 명령
 │   │   └── index.ts             # CLI 진입점
-│   ├── lib/                     # 공유 유틸리티
-│   │   └── fetch.ts             # API 호출용 fetch 유틸리티
 │   └── types/                   # 공통 TypeScript 타입 정의
 ├── tests/                       # 테스트 코드
 │   ├── unit/                    # Vitest 단위 테스트
@@ -114,192 +118,134 @@ hello-model-context-protocol/
 - 코드 품질: `ESLint` 및 `Prettier` 규칙을 강제합니다.
 - 문서화: 서버 설정, CLI 사용법, 도구 정의에 대한 명확한 문서를 제공합니다.
 
-## 🚀 FastMCP 구현 완료
+## 🔄 공통 비즈니스 로직 아키텍처
 
-이 프로젝트는 **FastMCP**를 사용하여 MCP 서버를 구현했습니다. FastMCP는 기존 MCP SDK보다 더 간단하고 직관적인 API를 제공합니다.
+이 프로젝트는 **DRY(Don't Repeat Yourself) 원칙**을 따라 CLI와 MCP 서버에서 동일한 비즈니스 로직을 공유합니다.
 
-### 주요 특징
-
-- ✅ **FastMCP 기반 서버**: 간단하고 효율적인 MCP 서버 구현
-- ✅ **도구 지원**: `add` (숫자 더하기), `fetchWeather` (날씨 조회) 도구 제공
-- ✅ **리소스 지원**: 애플리케이션 로그 리소스 제공
-- ✅ **TypeScript 타입 안전성**: Zod 스키마를 통한 강력한 타입 검증
-- ✅ **모듈화된 스키마**: 도구별로 분리된 스키마 관리
-- ✅ **로깅 시스템**: 구조화된 로깅으로 디버깅 지원
-
-### 🏗️ 스키마 아키텍처
-
-이 프로젝트는 **도구별 스키마 분리** 아키텍처를 채택하여 다음과 같은 장점을 제공합니다:
-
-#### 스키마 구조
+### 구조
 
 ```
-src/schemas/
-├── add.ts              # Add 도구 전용 스키마
-├── fetchWeather.ts     # FetchWeather 도구 전용 스키마
-└── index.ts            # 중앙 집중식 export
+src/lib/tools/
+├── add.ts              # Add 도구 핵심 비즈니스 로직
+├── weather.ts          # Weather 도구 핵심 비즈니스 로직
+└── index.ts            # 모든 도구 로직 export
 ```
 
-#### 장점
+### 장점
 
-- **🔧 유지보수성**: 각 도구의 스키마가 독립적으로 관리됨
-- **📦 모듈화**: 새로운 도구 추가 시 해당 스키마만 생성하면 됨
-- **🔍 가독성**: 도구별로 스키마가 분리되어 코드 이해가 쉬움
-- **🚀 확장성**: 대규모 프로젝트에서도 스키마 관리가 용이함
-- **♻️ 재사용성**: 다른 프로젝트에서 특정 도구 스키마만 가져와 사용 가능
+- **🚫 중복 제거**: CLI와 MCP 서버에서 동일한 로직을 재사용
+- **🔧 유지보수성**: 비즈니스 로직 변경 시 한 곳만 수정
+- **🧪 테스트 용이성**: 핵심 로직을 독립적으로 테스트 가능
+- **📏 일관성**: CLI와 MCP 서버의 동작이 항상 일치
+- **🔌 인터페이스 분리**: 비즈니스 로직과 인터페이스 로직 분리
 
-### 빠른 시작
-
-#### 1. 의존성 설치
-
-```bash
-npm install
-# 또는
-pnpm install
-```
-
-#### 2. 개발 서버 실행
-
-```bash
-npm run dev
-```
-
-#### 3. 서버 빌드 및 실행
-
-```bash
-npm run build
-npm start
-```
-
-### 사용 가능한 도구
-
-#### Add 도구
-
-두 숫자를 더하는 간단한 계산 도구입니다.
-
-**매개변수:**
-
-- `a` (number): 첫 번째 숫자
-- `b` (number): 두 번째 숫자
-
-**예시 응답:**
-
-```json
-{
-  "result": 15,
-  "calculation": "10 + 5 = 15"
-}
-```
-
-#### FetchWeather 도구
-
-지정된 위치의 날씨 정보를 조회합니다 (현재는 모의 데이터 반환).
-
-**매개변수:**
-
-- `location` (string): 날씨를 조회할 위치
-- `units` (string, 선택사항): 온도 단위 ('celsius' 또는 'fahrenheit', 기본값: 'celsius')
-
-**예시 응답:**
-
-```json
-{
-  "location": "서울",
-  "temperature": 22,
-  "description": "맑음",
-  "humidity": 65,
-  "units": "celsius"
-}
-```
-
-### 사용 가능한 리소스
-
-#### Application Logs
-
-애플리케이션의 로그 데이터에 접근할 수 있습니다.
-
-**URI:** `logs://application`
-**형식:** JSON
-
-### MCP 클라이언트와 연결
-
-이 서버는 Claude Desktop, Cursor 등의 MCP 클라이언트와 연결할 수 있습니다.
-
-#### Claude Desktop 설정 예시
-
-`claude_desktop_config.json` 파일에 다음과 같이 추가:
-
-```json
-{
-  "mcpServers": {
-    "hello-mcp": {
-      "command": "node",
-      "args": ["dist/server/index.js"],
-      "cwd": "/path/to/hello-model-context-protocol"
-    }
-  }
-}
-```
-
-### 개발 스크립트
-
-- `npm run dev`: 개발 서버 실행 (tsx 사용)
-- `npm run build`: TypeScript 빌드
-- `npm start`: 빌드된 서버 실행
-- `npm test`: 단위 테스트 실행
-- `npm run test:e2e`: E2E 테스트 실행
-- `npm run lint`: ESLint 검사
-- `npm run format`: Prettier 포맷팅
-
-### 🛠️ 새로운 도구 추가하기
-
-스키마 분리 아키텍처 덕분에 새로운 도구를 쉽게 추가할 수 있습니다:
-
-#### 1. 스키마 정의
-
-`src/schemas/myTool.ts` 파일 생성:
+### 사용 예시
 
 ```typescript
-import { z } from 'zod';
+// CLI에서 사용
+import { addNumbers } from '@/lib/tools';
+const result = addNumbers(5, 3);
 
-export const MyToolSchema = z.object({
-  input: z.string().describe('입력 매개변수'),
-  // 추가 매개변수들...
-});
-
-export type MyToolInput = z.infer<typeof MyToolSchema>;
-
-export interface MyToolResponse {
-  result: string;
-  // 응답 필드들...
-}
+// MCP 서버에서 사용
+import { executeAddTool } from '@/lib/tools';
+const result = executeAddTool({ a: 5, b: 3 });
 ```
 
-#### 2. 스키마 export 추가
+## 🖥️ CLI 사용법
 
-`src/schemas/index.ts`에 추가:
+### 직접 `mcp-tool` 명령 사용하기
 
-```typescript
-export { MyToolSchema, type MyToolInput, type MyToolResponse } from './myTool';
+#### 방법 1: npm 스크립트 사용 (권장)
+
+```bash
+npm run mcp-tool -- add 5 3
+npm run mcp-tool -- fetch-weather Seoul --verbose
+npm run mcp-tool -- examples
+npm run mcp-tool -- --help
 ```
 
-#### 3. 서버에 도구 등록
+#### 방법 2: bash 스크립트 사용
 
-`src/server/index.ts`에 추가:
+```bash
+# 실행 권한 부여 (최초 1회)
+chmod +x mcp-tool.sh
 
-```typescript
-import { MyToolSchema } from '@/schemas';
-
-// FastMCP 서버에 도구 추가
-server.addTool({
-  name: 'myTool',
-  description: '새로운 도구 설명',
-  parameters: MyToolSchema,
-  execute: async args => {
-    // 도구 로직 구현
-    return JSON.stringify({ result: 'success' });
-  },
-});
+# 사용
+./mcp-tool.sh add 5 3
+./mcp-tool.sh fetch-weather Seoul --verbose
+./mcp-tool.sh examples
+./mcp-tool.sh --help
 ```
 
-이렇게 3단계만으로 새로운 도구를 추가할 수 있습니다! 🎉
+#### 방법 3: 직접 실행
+
+```bash
+npx tsx src/cli/index.ts add 5 3
+npx tsx src/cli/index.ts fetch-weather Seoul --verbose
+npx tsx src/cli/index.ts examples
+npx tsx src/cli/index.ts --help
+```
+
+#### 방법 4: 전역 설치 (선택사항)
+
+```bash
+# 프로젝트를 전역으로 링크
+npm link
+
+# 이후 어디서든 사용 가능
+mcp-tool add 5 3
+mcp-tool fetch-weather Seoul --verbose
+mcp-tool examples
+mcp-tool --help
+```
+
+### CLI 명령 예시
+
+#### Add 명령
+
+```bash
+# 기본 사용법
+npm run mcp-tool -- add 10 5
+# 결과: 15
+
+# 상세 출력
+npm run mcp-tool -- add 10.5 2.3 --verbose
+# 결과:
+# ✅ 계산 완료:
+#    입력: 10.5, 2.3
+#    결과: 12.8
+#    계산식: 10.5 + 2.3 = 12.8
+```
+
+#### FetchWeather 명령
+
+```bash
+# 기본 사용법
+npm run mcp-tool -- fetch-weather Seoul
+# 결과: Seoul: 22°C, 맑음
+
+# 화씨 단위로 조회
+npm run mcp-tool -- fetch-weather "New York" --units fahrenheit
+# 결과: New York: 72°F, 맑음
+
+# 상세 출력
+npm run mcp-tool -- fetch-weather Tokyo --verbose
+# 결과:
+# 🌤️ 날씨 정보 조회 완료:
+#    위치: Tokyo
+#    온도: 22°C
+#    상태: 맑음
+#    습도: 65%
+#    단위: celsius
+```
+
+#### Examples 명령
+
+```bash
+# 모든 예시 보기
+npm run mcp-tool -- examples
+
+# 특정 명령 예시만 보기
+npm run mcp-tool -- examples --command add
+npm run mcp-tool -- examples --command fetch-weather
+```

@@ -1,31 +1,32 @@
 import { Command } from 'commander';
-import { addNumbers } from '@/server/tools/add';
-import { Logger } from '@/lib/fetch';
+import { addNumbers } from '@/lib/tools';
 
 /**
  * Add 명령을 위한 CLI 핸들러
  */
 export function createAddCommand(): Command {
   const addCommand = new Command('add');
-  
+
   addCommand
     .description('두 숫자를 더합니다')
     .argument('<a>', '첫 번째 숫자', parseFloat)
     .argument('<b>', '두 번째 숫자', parseFloat)
     .option('-v, --verbose', '상세한 출력 표시')
-    .action(async (a: number, b: number, options: { verbose?: boolean }) => {
+    .action((a: number, b: number, options: { verbose?: boolean }) => {
       try {
         if (isNaN(a) || isNaN(b)) {
           console.error('❌ 오류: 유효한 숫자를 입력해주세요.');
           process.exit(1);
         }
-        
+
         if (options.verbose) {
-          Logger.info('Add 명령 실행 시작', { a, b });
+          console.error(
+            `[INFO] Add 명령 실행 시작 ${JSON.stringify({ a, b })}`
+          );
         }
-        
-        const result = await addNumbers(a, b);
-        
+
+        const result = addNumbers(a, b);
+
         if (options.verbose) {
           console.log('✅ 계산 완료:');
           console.log(`   입력: ${a}, ${b}`);
@@ -34,19 +35,21 @@ export function createAddCommand(): Command {
         } else {
           console.log(result.result);
         }
-        
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
         console.error(`❌ 오류: ${errorMessage}`);
-        
+
         if (options.verbose) {
-          Logger.error('Add 명령 실행 실패', { error: errorMessage });
+          console.error(
+            `[ERROR] Add 명령 실행 실패 ${JSON.stringify({ error: errorMessage })}`
+          );
         }
-        
+
         process.exit(1);
       }
     });
-  
+
   return addCommand;
 }
 

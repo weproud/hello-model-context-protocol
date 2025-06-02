@@ -33,15 +33,28 @@ export class FetchUtil {
       timeout?: number;
     } = {}
   ): Promise<T> {
-    return this.request<T>(url, {
+    const requestOptions: {
+      method: string;
+      headers?: Record<string, string>;
+      body?: string;
+      timeout?: number;
+    } = {
       method: 'POST',
-      body: data ? JSON.stringify(data) : undefined,
       headers: {
         'Content-Type': 'application/json',
         ...options.headers,
       },
-      ...options,
-    });
+    };
+
+    if (options.timeout !== undefined) {
+      requestOptions.timeout = options.timeout;
+    }
+
+    if (data) {
+      requestOptions.body = JSON.stringify(data);
+    }
+
+    return this.request<T>(url, requestOptions);
   }
 
   /**
@@ -51,9 +64,9 @@ export class FetchUtil {
     url: string,
     options: {
       method: string;
-      headers?: Record<string, string>;
-      body?: string;
-      timeout?: number;
+      headers?: Record<string, string> | undefined;
+      body?: string | undefined;
+      timeout?: number | undefined;
     }
   ): Promise<T> {
     const controller = new AbortController();
@@ -64,12 +77,20 @@ export class FetchUtil {
     }, timeout);
 
     try {
-      const response = await fetch(url, {
+      const fetchOptions: RequestInit = {
         method: options.method,
-        headers: options.headers,
-        body: options.body,
         signal: controller.signal,
-      });
+      };
+
+      if (options.headers) {
+        fetchOptions.headers = options.headers;
+      }
+
+      if (options.body) {
+        fetchOptions.body = options.body;
+      }
+
+      const response = await fetch(url, fetchOptions);
 
       clearTimeout(timeoutId);
 
@@ -109,30 +130,43 @@ export class FetchUtil {
         );
       }
 
-      throw new MCPError('알 수 없는 오류가 발생했습니다', 'UNKNOWN_ERROR', 500);
+      throw new MCPError(
+        '알 수 없는 오류가 발생했습니다',
+        'UNKNOWN_ERROR',
+        500
+      );
     }
   }
 }
 
 /**
  * 로깅 유틸리티
+ * MCP 서버에서는 stdout이 프로토콜 통신에 사용되므로 모든 로그를 stderr로 출력합니다.
  */
 export class Logger {
   static info(message: string, metadata?: Record<string, unknown>): void {
-    console.log(`[INFO] ${message}`, metadata ? JSON.stringify(metadata) : '');
+    process.stderr.write(
+      `[INFO] ${message} ${metadata ? JSON.stringify(metadata) : ''}\n`
+    );
   }
 
   static warn(message: string, metadata?: Record<string, unknown>): void {
-    console.warn(`[WARN] ${message}`, metadata ? JSON.stringify(metadata) : '');
+    process.stderr.write(
+      `[WARN] ${message} ${metadata ? JSON.stringify(metadata) : ''}\n`
+    );
   }
 
   static error(message: string, metadata?: Record<string, unknown>): void {
-    console.error(`[ERROR] ${message}`, metadata ? JSON.stringify(metadata) : '');
+    process.stderr.write(
+      `[ERROR] ${message} ${metadata ? JSON.stringify(metadata) : ''}\n`
+    );
   }
 
   static debug(message: string, metadata?: Record<string, unknown>): void {
-    if (process.env.NODE_ENV === 'development') {
-      console.debug(`[DEBUG] ${message}`, metadata ? JSON.stringify(metadata) : '');
+    if (process.env['NODE_ENV'] === 'development') {
+      process.stderr.write(
+        `[DEBUG] ${message} ${metadata ? JSON.stringify(metadata) : ''}\n`
+      );
     }
   }
 }

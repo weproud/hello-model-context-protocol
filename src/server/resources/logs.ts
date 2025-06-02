@@ -7,7 +7,7 @@ import { Logger } from '@/lib/fetch';
  */
 export class LogsResource {
   private static logs: LogEntry[] = [];
-  
+
   /**
    * 로그 자원 정의
    */
@@ -19,7 +19,7 @@ export class LogsResource {
       mimeType: 'application/json',
     };
   }
-  
+
   /**
    * 로그 엔트리 추가
    */
@@ -28,49 +28,54 @@ export class LogsResource {
       ...entry,
       timestamp: new Date().toISOString(),
     };
-    
+
     this.logs.push(logEntry);
-    
+
     // 최대 1000개의 로그만 유지
     if (this.logs.length > 1000) {
       this.logs = this.logs.slice(-1000);
     }
-    
-    Logger.info('로그 엔트리 추가됨', logEntry);
+
+    Logger.info(
+      '로그 엔트리 추가됨',
+      logEntry as unknown as Record<string, unknown>
+    );
   }
-  
+
   /**
    * 모든 로그 반환
    */
   static getAllLogs(): LogEntry[] {
     return [...this.logs];
   }
-  
+
   /**
    * 레벨별 로그 필터링
    */
   static getLogsByLevel(level: LogEntry['level']): LogEntry[] {
     return this.logs.filter(log => log.level === level);
   }
-  
+
   /**
    * 최근 로그 반환
    */
   static getRecentLogs(count: number = 50): LogEntry[] {
     return this.logs.slice(-count);
   }
-  
+
   /**
    * 로그 검색
    */
   static searchLogs(query: string): LogEntry[] {
     const lowerQuery = query.toLowerCase();
-    return this.logs.filter(log => 
-      log.message.toLowerCase().includes(lowerQuery) ||
-      (log.metadata && JSON.stringify(log.metadata).toLowerCase().includes(lowerQuery))
+    return this.logs.filter(
+      log =>
+        log.message.toLowerCase().includes(lowerQuery) ||
+        (log.metadata &&
+          JSON.stringify(log.metadata).toLowerCase().includes(lowerQuery))
     );
   }
-  
+
   /**
    * 로그 초기화
    */
@@ -78,7 +83,7 @@ export class LogsResource {
     this.logs = [];
     Logger.info('로그가 초기화되었습니다');
   }
-  
+
   /**
    * MCP 자원 핸들러
    */
@@ -86,7 +91,7 @@ export class LogsResource {
     if (uri !== 'logs://application') {
       throw new Error(`지원하지 않는 자원 URI: ${uri}`);
     }
-    
+
     const logs = this.getAllLogs();
     return JSON.stringify(logs, null, 2);
   }
