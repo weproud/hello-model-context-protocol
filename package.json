@@ -5,13 +5,14 @@
   "type": "module",
   "main": "dist/server/index.js",
   "bin": {
-    "mcp-tool": "dist/cli/index.js"
+    "mcp-tool": "mcp-tool.mjs"
   },
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/server/index.ts",
     "start": "node dist/server/index.js",
     "cli": "tsx src/cli/index.ts",
+    "mcp-tool": "tsx src/cli/index.ts",
     "test": "vitest",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",

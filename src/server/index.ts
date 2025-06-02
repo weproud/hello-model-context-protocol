@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import { FastMCP } from 'fastmcp';
-import { Logger } from '@/lib/fetch';
-import { AddToolSchema, FetchWeatherSchema } from '@/schemas';
-import { executeAddTool, executeFetchWeatherTool } from '@/lib/tools';
+import { Logger } from '../lib/fetch.js';
+import { AddToolSchema, FetchWeatherSchema } from '../schemas/index.js';
+import { executeAddTool, executeFetchWeatherTool } from '../lib/tools/index.js';
 
 /**
  * FastMCP를 사용한 MCP 서버 생성
@@ -132,8 +132,8 @@ async function startServer(): Promise<void> {
   }
 }
 
-// 서버 시작
-if (require.main === module) {
+// 서버 시작 (ES modules 방식)
+if (import.meta.url === `file://${process.argv[1]}`) {
   startServer();
 
   // 종료 시그널 처리

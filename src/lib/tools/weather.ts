@@ -2,7 +2,7 @@ import {
   FetchWeatherSchema,
   type FetchWeatherInput,
   type WeatherResponse,
-} from '@/schemas';
+} from '../../schemas/index.js';
 
 /**
  * 공통 Weather 비즈니스 로직
@@ -61,10 +61,6 @@ export class WeatherTool {
 
     try {
       // 실제 API 호출 로직은 여기에 구현할 예정
-      // const { location, units = 'celsius' } = input;
-      // const unitsParam = units === 'celsius' ? 'metric' : 'imperial';
-      // const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=${unitsParam}`);
-
       // 현재는 모의 데이터 반환
       return this.execute(input);
     } catch (error) {

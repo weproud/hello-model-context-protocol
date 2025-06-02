@@ -80,15 +80,9 @@ export class FetchUtil {
       const fetchOptions: RequestInit = {
         method: options.method,
         signal: controller.signal,
+        ...(options.headers && { headers: options.headers }),
+        ...(options.body && { body: options.body }),
       };
-
-      if (options.headers) {
-        fetchOptions.headers = options.headers;
-      }
-
-      if (options.body) {
-        fetchOptions.body = options.body;
-      }
 
       const response = await fetch(url, fetchOptions);
 

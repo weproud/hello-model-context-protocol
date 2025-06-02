@@ -88,8 +88,8 @@ async function main(): Promise<void> {
   }
 }
 
-// 스크립트가 직접 실행될 때만 main 함수 호출
-if (require.main === module) {
+// 스크립트가 직접 실행될 때만 main 함수 호출 (ES modules 방식)
+if (import.meta.url === `file://${process.argv[1]}`) {
   main().catch(error => {
     console.error('❌ 예상치 못한 오류:', error);
     process.exit(1);

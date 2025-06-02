@@ -1,4 +1,8 @@
-import { AddToolSchema, type AddToolInput, type AddToolResponse } from '@/schemas';
+import {
+  AddToolSchema,
+  type AddToolInput,
+  type AddToolResponse,
+} from '../../schemas/index.js';
 
 /**
  * 공통 Add 비즈니스 로직
@@ -12,7 +16,7 @@ export class AddTool {
     const { a, b } = input;
     const result = a + b;
     const calculation = `${a} + ${b} = ${result}`;
-    
+
     return {
       result,
       calculation,
@@ -25,7 +29,7 @@ export class AddTool {
   static executeWithValidation(args: unknown): AddToolResponse {
     // Zod 스키마로 입력 검증
     const validatedInput = AddToolSchema.parse(args);
-    
+
     // 비즈니스 로직 실행
     return this.execute(validatedInput);
   }
