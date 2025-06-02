@@ -57,13 +57,17 @@ Model Context Protocol (MCP) 서버 및 CLI 도구 개발 프로젝트
 hello-model-context-protocol/
 ├── src/                         # 소스 코드 루트 디렉토리
 │   ├── server/                  # MCP 서버 로직
-│   │   ├── tools/               # 도구 정의
+│   │   ├── tools/               # 도구 정의 (레거시)
 │   │   │   ├── add.ts           # 예시 도구: 숫자 더하기
 │   │   │   └── fetchWeather.ts  # 예시 도구: 날씨 가져오기
 │   │   ├── resources/           # 자원 핸들러
 │   │   │   └── logs.ts          # 예시 자원: 로그 파일
 │   │   ├── prompts/             # 프롬프트 템플릿
-│   │   └── index.ts             # 서버 초기화
+│   │   └── index.ts             # FastMCP 서버 초기화
+│   ├── schemas/                 # 🆕 도구별 스키마 정의
+│   │   ├── add.ts               # Add 도구 스키마
+│   │   ├── fetchWeather.ts      # FetchWeather 도구 스키마
+│   │   └── index.ts             # 모든 스키마 export
 │   ├── cli/                     # CLI 로직
 │   │   ├── commands/            # CLI 명령 핸들러
 │   │   │   ├── add.ts           # add 도구용 CLI 명령
@@ -71,7 +75,7 @@ hello-model-context-protocol/
 │   │   └── index.ts             # CLI 진입점
 │   ├── lib/                     # 공유 유틸리티
 │   │   └── fetch.ts             # API 호출용 fetch 유틸리티
-│   └── types/                   # TypeScript 타입 정의
+│   └── types/                   # 공통 TypeScript 타입 정의
 ├── tests/                       # 테스트 코드
 │   ├── unit/                    # Vitest 단위 테스트
 │   └── e2e/                     # Playwright E2E 테스트
@@ -109,3 +113,193 @@ hello-model-context-protocol/
 - 보안: 입력을 살균(sanitize)하고 자원에 대한 접근 제어를 구현합니다.
 - 코드 품질: `ESLint` 및 `Prettier` 규칙을 강제합니다.
 - 문서화: 서버 설정, CLI 사용법, 도구 정의에 대한 명확한 문서를 제공합니다.
+
+## 🚀 FastMCP 구현 완료
+
+이 프로젝트는 **FastMCP**를 사용하여 MCP 서버를 구현했습니다. FastMCP는 기존 MCP SDK보다 더 간단하고 직관적인 API를 제공합니다.
+
+### 주요 특징
+
+- ✅ **FastMCP 기반 서버**: 간단하고 효율적인 MCP 서버 구현
+- ✅ **도구 지원**: `add` (숫자 더하기), `fetchWeather` (날씨 조회) 도구 제공
+- ✅ **리소스 지원**: 애플리케이션 로그 리소스 제공
+- ✅ **TypeScript 타입 안전성**: Zod 스키마를 통한 강력한 타입 검증
+- ✅ **모듈화된 스키마**: 도구별로 분리된 스키마 관리
+- ✅ **로깅 시스템**: 구조화된 로깅으로 디버깅 지원
+
+### 🏗️ 스키마 아키텍처
+
+이 프로젝트는 **도구별 스키마 분리** 아키텍처를 채택하여 다음과 같은 장점을 제공합니다:
+
+#### 스키마 구조
+
+```
+src/schemas/
+├── add.ts              # Add 도구 전용 스키마
+├── fetchWeather.ts     # FetchWeather 도구 전용 스키마
+└── index.ts            # 중앙 집중식 export
+```
+
+#### 장점
+
+- **🔧 유지보수성**: 각 도구의 스키마가 독립적으로 관리됨
+- **📦 모듈화**: 새로운 도구 추가 시 해당 스키마만 생성하면 됨
+- **🔍 가독성**: 도구별로 스키마가 분리되어 코드 이해가 쉬움
+- **🚀 확장성**: 대규모 프로젝트에서도 스키마 관리가 용이함
+- **♻️ 재사용성**: 다른 프로젝트에서 특정 도구 스키마만 가져와 사용 가능
+
+### 빠른 시작
+
+#### 1. 의존성 설치
+
+```bash
+npm install
+# 또는
+pnpm install
+```
+
+#### 2. 개발 서버 실행
+
+```bash
+npm run dev
+```
+
+#### 3. 서버 빌드 및 실행
+
+```bash
+npm run build
+npm start
+```
+
+### 사용 가능한 도구
+
+#### Add 도구
+
+두 숫자를 더하는 간단한 계산 도구입니다.
+
+**매개변수:**
+
+- `a` (number): 첫 번째 숫자
+- `b` (number): 두 번째 숫자
+
+**예시 응답:**
+
+```json
+{
+  "result": 15,
+  "calculation": "10 + 5 = 15"
+}
+```
+
+#### FetchWeather 도구
+
+지정된 위치의 날씨 정보를 조회합니다 (현재는 모의 데이터 반환).
+
+**매개변수:**
+
+- `location` (string): 날씨를 조회할 위치
+- `units` (string, 선택사항): 온도 단위 ('celsius' 또는 'fahrenheit', 기본값: 'celsius')
+
+**예시 응답:**
+
+```json
+{
+  "location": "서울",
+  "temperature": 22,
+  "description": "맑음",
+  "humidity": 65,
+  "units": "celsius"
+}
+```
+
+### 사용 가능한 리소스
+
+#### Application Logs
+
+애플리케이션의 로그 데이터에 접근할 수 있습니다.
+
+**URI:** `logs://application`
+**형식:** JSON
+
+### MCP 클라이언트와 연결
+
+이 서버는 Claude Desktop, Cursor 등의 MCP 클라이언트와 연결할 수 있습니다.
+
+#### Claude Desktop 설정 예시
+
+`claude_desktop_config.json` 파일에 다음과 같이 추가:
+
+```json
+{
+  "mcpServers": {
+    "hello-mcp": {
+      "command": "node",
+      "args": ["dist/server/index.js"],
+      "cwd": "/path/to/hello-model-context-protocol"
+    }
+  }
+}
+```
+
+### 개발 스크립트
+
+- `npm run dev`: 개발 서버 실행 (tsx 사용)
+- `npm run build`: TypeScript 빌드
+- `npm start`: 빌드된 서버 실행
+- `npm test`: 단위 테스트 실행
+- `npm run test:e2e`: E2E 테스트 실행
+- `npm run lint`: ESLint 검사
+- `npm run format`: Prettier 포맷팅
+
+### 🛠️ 새로운 도구 추가하기
+
+스키마 분리 아키텍처 덕분에 새로운 도구를 쉽게 추가할 수 있습니다:
+
+#### 1. 스키마 정의
+
+`src/schemas/myTool.ts` 파일 생성:
+
+```typescript
+import { z } from 'zod';
+
+export const MyToolSchema = z.object({
+  input: z.string().describe('입력 매개변수'),
+  // 추가 매개변수들...
+});
+
+export type MyToolInput = z.infer<typeof MyToolSchema>;
+
+export interface MyToolResponse {
+  result: string;
+  // 응답 필드들...
+}
+```
+
+#### 2. 스키마 export 추가
+
+`src/schemas/index.ts`에 추가:
+
+```typescript
+export { MyToolSchema, type MyToolInput, type MyToolResponse } from './myTool';
+```
+
+#### 3. 서버에 도구 등록
+
+`src/server/index.ts`에 추가:
+
+```typescript
+import { MyToolSchema } from '@/schemas';
+
+// FastMCP 서버에 도구 추가
+server.addTool({
+  name: 'myTool',
+  description: '새로운 도구 설명',
+  parameters: MyToolSchema,
+  execute: async args => {
+    // 도구 로직 구현
+    return JSON.stringify({ result: 'success' });
+  },
+});
+```
+
+이렇게 3단계만으로 새로운 도구를 추가할 수 있습니다! 🎉

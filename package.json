@@ -1,0 +1,62 @@
+{
+  "name": "hello-model-context-protocol",
+  "version": "1.0.0",
+  "description": "Model Context Protocol (MCP) 서버 및 CLI 도구 개발 프로젝트",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "bin": {
+    "mcp-tool": "dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/server/index.ts",
+    "start": "node dist/server/index.js",
+    "cli": "tsx src/cli/index.ts",
+    "test": "vitest",
+    "test:e2e": "playwright test",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write src/**/*.ts",
+    "format:check": "prettier --check src/**/*.ts",
+    "type-check": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weproud/hello-model-context-protocol.git"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "typescript",
+    "fastmcp",
+    "cli"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/weproud/hello-model-context-protocol/issues"
+  },
+  "homepage": "https://github.com/weproud/hello-model-context-protocol#readme",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "fastmcp": "^2.2.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.29",
+    "@typescript-eslint/eslint-plugin": "^8.33.0",
+    "@typescript-eslint/parser": "^8.33.0",
+    "eslint": "^9.28.0",
+    "prettier": "^3.5.3",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
