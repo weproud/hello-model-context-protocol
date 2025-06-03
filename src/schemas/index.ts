@@ -15,3 +15,17 @@ export {
   type GreetingToolInput,
   type GreetingToolResponse,
 } from './greeting.js';
+
+// Slack 도구 스키마
+export {
+  SlackToolSchema,
+  type SlackToolInput,
+  type SlackToolResponse,
+} from './slack.js';
+
+// Discord 도구 스키마
+export {
+  DiscordToolSchema,
+  type DiscordToolInput,
+  type DiscordToolResponse,
+} from './discord.js';

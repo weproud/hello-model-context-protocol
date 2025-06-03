@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { createInitCommand, showInitExamples } from './commands/init';
+import { createInitCommand, showInitExamples } from './commands/init.js';
 import {
   createGreetingCommand,
   showGreetingExamples,
-} from './commands/greeting';
+} from './commands/greeting.js';
+import { createSlackCommand, showSlackExamples } from './commands/slack.js';
+import {
+  createDiscordCommand,
+  showDiscordExamples,
+} from './commands/discord.js';
+// import { createEnvCommand, showEnvExamples } from './commands/env.js';
 
 /**
  * MCP CLI 도구 메인 프로그램
@@ -24,13 +30,22 @@ function createCLI(): Command {
   // Greeting 명령 추가
   program.addCommand(createGreetingCommand());
 
+  // Slack 명령 추가
+  program.addCommand(createSlackCommand());
+
+  // Discord 명령 추가
+  program.addCommand(createDiscordCommand());
+
+  // 환경변수 명령 추가
+  // program.addCommand(createEnvCommand());
+
   // Examples 명령 추가
   const examplesCommand = new Command('examples');
   examplesCommand
     .description('사용 예시를 보여줍니다')
     .option(
       '-c, --command <command>',
-      '특정 명령의 예시만 표시 (init, greeting)'
+      '특정 명령의 예시만 표시 (init, greeting, send-message-slack, send-message-discord)'
     )
     .action((options: { command?: string }) => {
       if (options.command) {
@@ -41,9 +56,20 @@ function createCLI(): Command {
           case 'greeting':
             showGreetingExamples();
             break;
+          case 'send-message-slack':
+            showSlackExamples();
+            break;
+          case 'send-message-discord':
+            showDiscordExamples();
+            break;
+          // case 'env':
+          //   showEnvExamples();
+          //   break;
           default:
             console.error(`❌ 알 수 없는 명령: ${options.command}`);
-            console.log('사용 가능한 명령: init, greeting');
+            console.log(
+              '사용 가능한 명령: init, greeting, send-message-slack, send-message-discord'
+            );
             process.exit(1);
         }
       } else {
@@ -51,8 +77,14 @@ function createCLI(): Command {
         showInitExamples();
         console.log('');
         showGreetingExamples();
+        console.log('');
+        showSlackExamples();
+        console.log('');
+        showDiscordExamples();
         console.log('\n더 자세한 정보는 각 명령에 --help 옵션을 사용하세요.');
-        console.log('예: mcp-tool init --help, mcp-tool greeting --help');
+        console.log(
+          '예: mcp-tool init --help, mcp-tool greeting --help, mcp-tool send-message-slack --help, mcp-tool send-message-discord --help'
+        );
       }
     });
 
@@ -64,6 +96,8 @@ function createCLI(): Command {
     console.log('사용 예시:');
     console.log('  $ mcp-tool init');
     console.log('  $ mcp-tool greeting hi');
+    console.log('  $ mcp-tool send-message-slack "Hello, World!"');
+    console.log('  $ mcp-tool send-message-discord "Hello, Discord!"');
     console.log('  $ mcp-tool examples');
     console.log('');
     console.log('더 많은 예시를 보려면:');
