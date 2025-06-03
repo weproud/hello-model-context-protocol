@@ -151,6 +151,86 @@ import { executeAddTool } from '@/lib/tools';
 const result = executeAddTool({ a: 5, b: 3 });
 ```
 
+## 🔍 MCP Inspector 사용법
+
+MCP Inspector는 MCP 서버를 웹 UI로 테스트하고 디버깅할 수 있는 공식 도구입니다.
+
+### MCP Inspector 실행
+
+#### 방법 1: npm 스크립트 사용 (권장)
+
+```bash
+# TypeScript 소스 파일로 직접 실행
+npm run inspect
+
+# 빌드된 JavaScript 파일로 실행
+npm run build
+npm run inspect:built
+```
+
+#### 방법 2: 편리한 스크립트 사용
+
+```bash
+# 실행 권한 부여 (최초 1회)
+chmod +x scripts/inspect.sh
+
+# TypeScript 파일로 실행
+./scripts/inspect.sh
+
+# 빌드된 JavaScript 파일로 실행
+./scripts/inspect.sh --built
+
+# 도움말 보기
+./scripts/inspect.sh --help
+```
+
+#### 방법 3: FastMCP 직접 사용
+
+```bash
+# TypeScript 파일로 실행
+npx fastmcp inspect src/server/index.ts
+
+# JavaScript 파일로 실행 (빌드 후)
+npx fastmcp inspect dist/server/index.js
+```
+
+### MCP Inspector 사용 방법
+
+1. **서버 시작**: 위 명령어 중 하나를 실행하면 웹 브라우저가 자동으로 열립니다
+2. **도구 테스트**: 웹 UI에서 `add`, `fetchWeather` 도구를 직접 테스트할 수 있습니다
+3. **리소스 확인**: `logs://application` 리소스를 확인할 수 있습니다
+4. **실시간 디버깅**: 서버 로그와 요청/응답을 실시간으로 확인할 수 있습니다
+
+### MCP Inspector 기능
+
+- **🛠️ 도구 테스트**: 각 MCP 도구를 웹 UI에서 직접 실행
+- **📊 리소스 탐색**: 서버에서 제공하는 리소스 확인
+- **🔍 실시간 로그**: 서버 동작 상태 모니터링
+- **📝 스키마 확인**: 도구 매개변수 스키마 검증
+- **🚀 빠른 프로토타이핑**: 새로운 도구 개발 시 즉시 테스트
+
+### 예시 테스트 시나리오
+
+#### Add 도구 테스트
+
+1. MCP Inspector 실행
+2. "Tools" 탭에서 "add" 도구 선택
+3. 매개변수 입력: `{"a": 5, "b": 3}`
+4. "Execute" 버튼 클릭
+5. 결과 확인: `{"result": 8, "calculation": "5 + 3 = 8"}`
+
+#### FetchWeather 도구 테스트
+
+1. "Tools" 탭에서 "fetchWeather" 도구 선택
+2. 매개변수 입력: `{"location": "Seoul", "units": "celsius"}`
+3. "Execute" 버튼 클릭
+4. 결과 확인: 날씨 정보 JSON
+
+#### 로그 리소스 확인
+
+1. "Resources" 탭에서 "logs://application" 선택
+2. 애플리케이션 로그 데이터 확인
+
 ## 🖥️ CLI 사용법
 
 ### 직접 `mcp-tool` 명령 사용하기

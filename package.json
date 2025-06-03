@@ -13,6 +13,8 @@
     "start": "node dist/server/index.js",
     "cli": "tsx src/cli/index.ts",
     "mcp-tool": "tsx src/cli/index.ts",
+    "inspect": "npx fastmcp inspect src/server/index.ts",
+    "inspect:built": "npx fastmcp inspect dist/server/index.js",
     "test": "vitest",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
