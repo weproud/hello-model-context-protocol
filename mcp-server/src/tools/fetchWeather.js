@@ -1,5 +1,5 @@
-import { FetchWeatherSchema } from '../../../src/schemas/fetchWeather.js';
-import { executeFetchWeatherTool } from '../../../src/core/tools/weather.js';
+import { FetchWeatherSchema } from '../../../dist/schemas/fetchWeather.js';
+import { executeFetchWeatherTool } from '../../../dist/src/core/tools/weather.js';
 import logger from '../logger.js';
 
 /**

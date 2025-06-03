@@ -1,4 +1,4 @@
-import { MCPError } from '@/types';
+import { MCPError } from '../types/index.js';
 
 /**
  * HTTP 요청을 위한 유틸리티 함수

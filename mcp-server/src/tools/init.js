@@ -1,5 +1,5 @@
-import { InitToolSchema } from '../../../src/schemas/init.js';
-import { executeInitTool } from '../../../src/core/tools/init.js';
+import { InitToolSchema } from '../../../dist/schemas/init.js';
+import { executeInitTool } from '../../../dist/src/core/tools/init.js';
 import logger from '../logger.js';
 
 /**

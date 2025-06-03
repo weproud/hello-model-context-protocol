@@ -1,13 +1,9 @@
 import { FastMCP } from 'fastmcp';
 import path from 'path';
-import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import logger from './logger.js';
 import { registerHelloMCPTools } from './tools/index.js';
-
-// Load environment variables
-dotenv.config();
 
 // Constants
 const __filename = fileURLToPath(import.meta.url);
@@ -21,23 +17,23 @@ class HelloMCPServer {
     // Get version from package.json using synchronous fs
     const packagePath = path.join(__dirname, '../../package.json');
     const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
-    
+
     this.options = {
       name: 'Hello MCP Server',
-      version: packageJson.version
+      version: packageJson.version,
     };
-    
+
     this.server = new FastMCP(this.options);
     this.initialized = false;
-    
+
     this.server.addResource({});
     this.server.addResourceTemplate({});
-    
+
     // Bind methods
     this.init = this.init.bind(this);
     this.start = this.start.bind(this);
     this.stop = this.stop.bind(this);
-    
+
     // Setup logging
     this.logger = logger;
   }
@@ -50,7 +46,7 @@ class HelloMCPServer {
 
     // Register all Hello MCP tools
     registerHelloMCPTools(this.server);
-    
+
     this.initialized = true;
     return this;
   }
@@ -66,9 +62,9 @@ class HelloMCPServer {
     // Start the FastMCP server with increased timeout
     await this.server.start({
       transportType: 'stdio',
-      timeout: 120000 // 2 minutes timeout (in milliseconds)
+      timeout: 120000, // 2 minutes timeout (in milliseconds)
     });
-    
+
     return this;
   }
 

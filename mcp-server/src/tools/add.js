@@ -1,5 +1,5 @@
-import { AddToolSchema } from '../../../src/schemas/add.js';
-import { executeAddTool } from '../../../src/core/tools/add.js';
+import { AddToolSchema } from '../../../dist/schemas/add.js';
+import { executeAddTool } from '../../../dist/src/core/tools/add.js';
 import logger from '../logger.js';
 
 /**

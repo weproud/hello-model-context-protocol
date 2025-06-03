@@ -55,25 +55,29 @@ Model Context Protocol (MCP) 서버 및 CLI 도구 개발 프로젝트
 
 ```
 hello-model-context-protocol/
-├── src/                         # 소스 코드 루트 디렉토리
-│   ├── server/                  # MCP 서버 로직
-│   │   ├── tools/               # 도구 정의 (레거시)
-│   │   │   ├── add.ts           # 예시 도구: 숫자 더하기
-│   │   │   └── fetchWeather.ts  # 예시 도구: 날씨 가져오기
-│   │   ├── resources/           # 자원 핸들러
-│   │   │   └── logs.ts          # 예시 자원: 로그 파일
-│   │   ├── prompts/             # 프롬프트 템플릿
-│   │   └── index.ts             # FastMCP 서버 초기화
+├── mcp-server/                  # 🆕 실제 MCP 서버 (FastMCP 기반)
+│   ├── src/                     # MCP 서버 소스 코드
+│   │   ├── tools/               # 도구 정의
+│   │   │   ├── add.js           # 예시 도구: 숫자 더하기
+│   │   │   ├── fetchWeather.js  # 예시 도구: 날씨 가져오기
+│   │   │   ├── init.js          # 예시 도구: 프로젝트 초기화
+│   │   │   └── index.js         # 모든 도구 등록
+│   │   ├── index.js             # MCP 서버 메인 클래스
+│   │   └── logger.js            # 로깅 유틸리티
+│   └── server.js                # MCP 서버 진입점
+├── src/                         # 공유 소스 코드
 │   ├── schemas/                 # 🆕 도구별 스키마 정의
 │   │   ├── add.ts               # Add 도구 스키마
 │   │   ├── fetchWeather.ts      # FetchWeather 도구 스키마
+│   │   ├── init.ts              # Init 도구 스키마
 │   │   └── index.ts             # 모든 스키마 export
-│   ├── lib/                     # 공유 유틸리티 및 비즈니스 로직
-│   │   ├── tools/               # 🆕 공통 비즈니스 로직
-│   │   │   ├── add.ts           # Add 도구 핵심 로직
-│   │   │   ├── weather.ts       # Weather 도구 핵심 로직
+│   ├── core/                    # 🆕 공유 유틸리티 및 비즈니스 로직
+│   │   ├── tools/               # 공통 비즈니스 로직
+│   │   │   ├── add.ts           # Add 도구 로직
+│   │   │   ├── fetchWeather.ts  # FetchWeather 도구 로직
+│   │   │   ├── init.ts          # Init 도구 로직
 │   │   │   └── index.ts         # 모든 도구 로직 export
-│   │   └── fetch.ts             # API 호출용 fetch 유틸리티
+│   │   └── fetch.ts             # 공통 유틸리티 (Logger 등)
 │   ├── cli/                     # CLI 로직
 │   │   ├── commands/            # CLI 명령 핸들러
 │   │   │   ├── add.ts           # add 도구용 CLI 명령

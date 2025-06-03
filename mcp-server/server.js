@@ -1,11 +1,7 @@
 #!/usr/bin/env node
 
 import HelloMCPServer from './src/index.js';
-import dotenv from 'dotenv';
 import logger from './src/logger.js';
-
-// Load environment variables
-dotenv.config();
 
 /**
  * Start the MCP server
