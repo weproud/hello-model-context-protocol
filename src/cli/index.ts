@@ -6,6 +6,7 @@ import {
   createFetchWeatherCommand,
   showFetchWeatherExamples,
 } from './commands/fetchWeather';
+import { createInitCommand, showInitExamples } from './commands/init';
 
 /**
  * MCP CLI 도구 메인 프로그램
@@ -24,13 +25,16 @@ function createCLI(): Command {
   // FetchWeather 명령 추가
   program.addCommand(createFetchWeatherCommand());
 
+  // Init 명령 추가
+  program.addCommand(createInitCommand());
+
   // Examples 명령 추가
   const examplesCommand = new Command('examples');
   examplesCommand
     .description('사용 예시를 보여줍니다')
     .option(
       '-c, --command <command>',
-      '특정 명령의 예시만 표시 (add|fetch-weather)'
+      '특정 명령의 예시만 표시 (add|fetch-weather|init)'
     )
     .action((options: { command?: string }) => {
       if (options.command) {
@@ -41,9 +45,12 @@ function createCLI(): Command {
           case 'fetch-weather':
             showFetchWeatherExamples();
             break;
+          case 'init':
+            showInitExamples();
+            break;
           default:
             console.error(`❌ 알 수 없는 명령: ${options.command}`);
-            console.log('사용 가능한 명령: add, fetch-weather');
+            console.log('사용 가능한 명령: add, fetch-weather, init');
             process.exit(1);
         }
       } else {
@@ -51,6 +58,8 @@ function createCLI(): Command {
         showAddExamples();
         console.log('');
         showFetchWeatherExamples();
+        console.log('');
+        showInitExamples();
         console.log('\n더 자세한 정보는 각 명령에 --help 옵션을 사용하세요.');
         console.log('예: mcp-tool add --help');
       }
@@ -64,6 +73,7 @@ function createCLI(): Command {
     console.log('사용 예시:');
     console.log('  $ mcp-tool add 5 3');
     console.log('  $ mcp-tool fetch-weather Seoul');
+    console.log('  $ mcp-tool init');
     console.log('  $ mcp-tool examples');
     console.log('');
     console.log('더 많은 예시를 보려면:');

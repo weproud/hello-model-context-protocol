@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { fetchWeather } from '../../lib/tools/index.js';
+import { fetchWeather } from '../../core/tools/index.js';
 
 /**
  * FetchWeather 명령을 위한 CLI 핸들러

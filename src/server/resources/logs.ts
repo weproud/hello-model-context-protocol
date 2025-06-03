@@ -1,5 +1,5 @@
 import { type MCPResource, type LogEntry } from '@/types';
-import { Logger } from '@/lib/fetch';
+import { Logger } from '@/core/fetch';
 
 /**
  * 로그 자원 핸들러

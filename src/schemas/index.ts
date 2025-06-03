@@ -3,11 +3,7 @@
  */
 
 // Add 도구 스키마
-export {
-  AddToolSchema,
-  type AddToolInput,
-  type AddToolResponse,
-} from './add';
+export { AddToolSchema, type AddToolInput, type AddToolResponse } from './add';
 
 // FetchWeather 도구 스키마
 export {
@@ -15,3 +11,10 @@ export {
   type FetchWeatherInput,
   type WeatherResponse,
 } from './fetchWeather';
+
+// Init 도구 스키마
+export {
+  InitToolSchema,
+  type InitToolInput,
+  type InitToolResponse,
+} from './init';

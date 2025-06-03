@@ -4,11 +4,7 @@
  */
 
 // Add 도구
-export {
-  AddTool,
-  addNumbers,
-  executeAddTool,
-} from './add';
+export { AddTool, addNumbers, executeAddTool } from './add';
 
 // Weather 도구
 export {
@@ -17,3 +13,6 @@ export {
   executeFetchWeatherTool,
   fetchRealWeather,
 } from './weather';
+
+// Init 도구
+export { InitTool, initProject, executeInitTool } from './init';

@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { addNumbers } from '../../lib/tools/index.js';
+import { addNumbers } from '../../core/tools/index.js';
 
 /**
  * Add 명령을 위한 CLI 핸들러

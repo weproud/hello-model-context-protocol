@@ -1,9 +1,17 @@
 #!/usr/bin/env node
 
 import { FastMCP } from 'fastmcp';
-import { Logger } from '../lib/fetch.js';
-import { AddToolSchema, FetchWeatherSchema } from '../schemas/index.js';
-import { executeAddTool, executeFetchWeatherTool } from '../lib/tools/index.js';
+import { Logger } from '../core/fetch.js';
+import {
+  AddToolSchema,
+  FetchWeatherSchema,
+  InitToolSchema,
+} from '../schemas/index.js';
+import {
+  executeAddTool,
+  executeFetchWeatherTool,
+  executeInitTool,
+} from '../core/tools/index.js';
 
 /**
  * FastMCP를 사용한 MCP 서버 생성
@@ -62,6 +70,31 @@ function createMCPServer(): FastMCP {
     },
   });
 
+  // Init 도구 추가
+  server.addTool({
+    name: 'init',
+    description:
+      'MCP 프로젝트를 초기화합니다 (.hellomcp 디렉토리와 hello.yaml 파일 생성)',
+    parameters: InitToolSchema,
+    execute: async args => {
+      try {
+        Logger.info('Init 도구 실행', args);
+
+        // 공통 비즈니스 로직 사용
+        const result = await executeInitTool(args);
+
+        Logger.info('Init 도구 완료', { result });
+
+        return JSON.stringify(result);
+      } catch (error) {
+        Logger.error('Init 도구 실행 중 오류 발생', {
+          error: error instanceof Error ? error.message : String(error),
+        });
+        throw error;
+      }
+    },
+  });
+
   // 로그 리소스 추가
   server.addResource({
     uri: 'logs://application',
@@ -79,7 +112,7 @@ function createMCPServer(): FastMCP {
             metadata: {
               component: 'FastMCP Server',
               version: '1.0.0',
-              tools: ['add', 'fetchWeather'],
+              tools: ['add', 'fetchWeather', 'init'],
             },
           },
           {
@@ -87,7 +120,7 @@ function createMCPServer(): FastMCP {
             level: 'info',
             message: '도구 및 리소스가 성공적으로 등록되었습니다',
             metadata: {
-              toolCount: 2,
+              toolCount: 3,
               resourceCount: 1,
             },
           },
