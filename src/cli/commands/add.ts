@@ -58,7 +58,7 @@ export function createAddCommand(): Command {
  */
 export function showAddExamples(): void {
   console.log('Add 명령 사용 예시:');
-  console.log('  mcp-tool add 5 3');
-  console.log('  mcp-tool add 10.5 2.3 --verbose');
-  console.log('  mcp-tool add -1 5');
+  console.log('  hello-mcp add 5 3');
+  console.log('  hello-mcp add 10.5 2.3 --verbose');
+  console.log('  hello-mcp add -1 5');
 }

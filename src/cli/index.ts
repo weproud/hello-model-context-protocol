@@ -15,8 +15,8 @@ function createCLI(): Command {
   const program = new Command();
 
   program
-    .name('mcp-tool')
-    .description('Model Context Protocol (MCP) 서버 도구들을 위한 CLI')
+    .name('hello-mcp')
+    .description('Hello Model Context Protocol (MCP) 서버 도구들을 위한 CLI')
     .version('1.0.0');
 
   // Add 명령 추가

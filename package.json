@@ -1,25 +1,27 @@
 {
-  "name": "hello-model-context-protocol",
+  "name": "hello-mcp",
   "version": "1.0.0",
-  "description": "Model Context Protocol (MCP) 서버 및 CLI 도구 개발 프로젝트",
+  "description": "Model Context Protocol (MCP) 서버 및 CLI 도구 - 단일 패키지, 다중 진입점",
   "type": "module",
-  "main": "dist/server/index.js",
+  "main": "dist/mcp-server/src/index.js",
   "bin": {
-    "mcp-tool": "mcp-tool.mjs"
+    "hello-mcp": "bin/hello-mcp-cli.js",
+    "hello-mcp-server": "mcp-server/server.js"
   },
   "scripts": {
     "build": "tsc",
-    "dev": "tsx src/server/index.ts",
-    "start": "node dist/server/index.js",
-    "cli": "tsx src/cli/index.ts",
-    "mcp-tool": "tsx src/cli/index.ts",
-    "inspect": "npx fastmcp inspect src/server/index.ts",
-    "inspect:built": "npx fastmcp inspect dist/server/index.js",
+    "dev:server": "tsx mcp-server/src/index.ts",
+    "dev:cli": "tsx src/cli/index.ts",
+    "start:server": "node dist/mcp-server/src/index.js",
+    "start:cli": "node bin/hello-mcp-cli.js",
+    "hello-mcp": "tsx src/cli/index.ts",
+    "inspect": "npx fastmcp inspect mcp-server/src/index.ts",
+    "inspect:built": "npx fastmcp inspect dist/mcp-server/src/index.js",
     "test": "vitest",
-    "lint": "eslint src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix",
-    "format": "prettier --write src/**/*.ts",
-    "format:check": "prettier --check src/**/*.ts",
+    "lint": "eslint src/**/*.ts mcp-server/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts mcp-server/**/*.ts --fix",
+    "format": "prettier --write src/**/*.ts mcp-server/**/*.ts",
+    "format:check": "prettier --check src/**/*.ts mcp-server/**/*.ts",
     "type-check": "tsc --noEmit"
   },
   "repository": {
