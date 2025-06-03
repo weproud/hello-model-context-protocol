@@ -6,7 +6,8 @@
         "/Users/raiiz/madeinnook/workspace/hello-model-context-protocol/mcp-server/server.js"
       ],
       "env": {
-        "SLACK_WEBHOOK_URL": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+        "SLACK_WEBHOOK_URL": "your-slack-webhook-url",
+        "DISCORD_WEBHOOK_URL": "your-discord-webhook-url"
       },
       "cwd": "/Users/raiiz/madeinnook/workspace/hello-model-context-protocol"
     }

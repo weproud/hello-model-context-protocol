@@ -2,7 +2,6 @@ import { FastMCP } from 'fastmcp';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
-import logger from './logger.js';
 import { registerHelloMCPTools } from './tools/index.js';
 
 // Constants
@@ -15,16 +14,10 @@ interface PackageJson {
   description?: string;
 }
 
-interface ServerOptions {
-  name: string;
-  version: string;
-}
-
 /**
  * Main MCP server class that integrates with Hello MCP
  */
 class HelloMCPServer {
-  private options: ServerOptions;
   private server: FastMCP;
   private initialized: boolean;
 
@@ -35,16 +28,12 @@ class HelloMCPServer {
       fs.readFileSync(packagePath, 'utf8')
     );
 
-    this.options = {
+    // Create FastMCP server with proper options
+    this.server = new FastMCP({
       name: 'Hello MCP Server',
-      version: packageJson.version,
-    };
-
-    this.server = new FastMCP(this.options);
+      version: packageJson.version as `${number}.${number}.${number}`,
+    });
     this.initialized = false;
-
-    this.server.addResource({});
-    this.server.addResourceTemplate({});
 
     // Bind methods
     this.init = this.init.bind(this);
@@ -73,10 +62,9 @@ class HelloMCPServer {
       await this.init();
     }
 
-    // Start the FastMCP server with increased timeout
+    // Start the FastMCP server
     await this.server.start({
       transportType: 'stdio',
-      timeout: 120000, // 2 minutes timeout (in milliseconds)
     });
 
     return this;

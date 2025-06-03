@@ -1,6 +1,6 @@
 import { FastMCP } from 'fastmcp';
-import { InitToolSchema } from '../../../dist/src/schemas/init.js';
-import { executeInitTool } from '../../../dist/src/core/tools/init.js';
+import { InitToolSchema } from '../../../src/schemas/init.js';
+import { executeInitTool } from '../../../src/core/tools/init.js';
 import logger from '../logger.js';
 
 /**
@@ -14,7 +14,7 @@ export function registerInitTool(server: FastMCP): void {
     parameters: InitToolSchema,
     execute: async (args: unknown) => {
       try {
-        logger.info('Init 도구 실행', args);
+        logger.info('Init 도구 실행', args as Record<string, unknown>);
 
         // 공통 비즈니스 로직 사용
         const result = await executeInitTool(args);

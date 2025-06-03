@@ -1,6 +1,6 @@
 import { FastMCP } from 'fastmcp';
-import { SlackToolSchema } from '../../../dist/src/schemas/slack.js';
-import { executeSlackTool } from '../../../dist/src/core/tools/slack.js';
+import { SlackToolSchema } from '../../../src/schemas/slack.js';
+import { executeSlackTool } from '../../../src/core/tools/slack.js';
 import logger from '../logger.js';
 
 /**
@@ -15,7 +15,7 @@ export function registerSlackTool(server: FastMCP): void {
     parameters: SlackToolSchema,
     execute: async (args: unknown) => {
       try {
-        logger.info('Slack 도구 실행', args);
+        logger.info('Slack 도구 실행', args as Record<string, unknown>);
 
         // 공통 비즈니스 로직 사용
         const result = await executeSlackTool(args);

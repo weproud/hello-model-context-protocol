@@ -1,6 +1,6 @@
 import { FastMCP } from 'fastmcp';
-import { DiscordToolSchema } from '../../../dist/src/schemas/discord.js';
-import { executeDiscordTool } from '../../../dist/src/core/tools/discord.js';
+import { DiscordToolSchema } from '../../../src/schemas/discord.js';
+import { executeDiscordTool } from '../../../src/core/tools/discord.js';
 import logger from '../logger.js';
 
 /**
@@ -15,7 +15,7 @@ export function registerDiscordTool(server: FastMCP): void {
     parameters: DiscordToolSchema,
     execute: async (args: unknown) => {
       try {
-        logger.info('Discord 도구 실행', args);
+        logger.info('Discord 도구 실행', args as Record<string, unknown>);
 
         // 공통 비즈니스 로직 사용
         const result = await executeDiscordTool(args);

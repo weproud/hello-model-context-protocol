@@ -1,6 +1,6 @@
 import { FastMCP } from 'fastmcp';
-import { GreetingToolSchema } from '../../../dist/src/schemas/greeting.js';
-import { executeGreetingTool } from '../../../dist/src/core/tools/greeting.js';
+import { GreetingToolSchema } from '../../../src/schemas/greeting.js';
+import { executeGreetingTool } from '../../../src/core/tools/greeting.js';
 import logger from '../logger.js';
 
 /**
@@ -15,7 +15,7 @@ export function registerGreetingTool(server: FastMCP): void {
     parameters: GreetingToolSchema,
     execute: async (args: unknown) => {
       try {
-        logger.info('Greeting 도구 실행', args);
+        logger.info('Greeting 도구 실행', args as Record<string, unknown>);
 
         // 공통 비즈니스 로직 사용
         const result = await executeGreetingTool(args);
