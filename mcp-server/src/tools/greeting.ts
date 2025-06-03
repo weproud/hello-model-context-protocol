@@ -1,18 +1,19 @@
+import { FastMCP } from 'fastmcp';
 import { GreetingToolSchema } from '../../../dist/src/schemas/greeting.js';
 import { executeGreetingTool } from '../../../dist/src/core/tools/greeting.js';
 import logger from '../logger.js';
 
 /**
  * Register Greeting tool with MCP server
- * @param {Object} server - FastMCP server instance
+ * @param server - FastMCP server instance
  */
-export function registerGreetingTool(server) {
+export function registerGreetingTool(server: FastMCP): void {
   server.addTool({
     name: 'greeting',
     description:
       'Greeting 파일을 생성합니다 (.hellomcp 디렉토리에 hello-<name>.yaml 파일 생성)',
     parameters: GreetingToolSchema,
-    execute: async args => {
+    execute: async (args: unknown) => {
       try {
         logger.info('Greeting 도구 실행', args);
 

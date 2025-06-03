@@ -1,7 +1,8 @@
 /**
- * tools/index.js
+ * tools/index.ts
  * Export all Hello MCP tools for MCP server
  */
+import { FastMCP } from 'fastmcp';
 import { registerInitTool } from './init.js';
 import { registerGreetingTool } from './greeting.js';
 import { registerSlackTool } from './slack.js';
@@ -10,9 +11,9 @@ import logger from '../logger.js';
 
 /**
  * Register all Hello MCP tools with the MCP server
- * @param {Object} server - FastMCP server instance
+ * @param server - FastMCP server instance
  */
-export function registerHelloMCPTools(server) {
+export function registerHelloMCPTools(server: FastMCP): void {
   try {
     // Register each tool
     registerInitTool(server);
@@ -22,7 +23,8 @@ export function registerHelloMCPTools(server) {
 
     logger.info('All Hello MCP tools registered successfully');
   } catch (error) {
-    logger.error(`Error registering Hello MCP tools: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(`Error registering Hello MCP tools: ${errorMessage}`);
     throw error;
   }
 }

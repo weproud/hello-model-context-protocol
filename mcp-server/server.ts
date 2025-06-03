@@ -6,7 +6,7 @@ import logger from './src/logger.js';
 /**
  * Start the MCP server
  */
-async function startServer() {
+async function startServer(): Promise<void> {
   const server = new HelloMCPServer();
 
   // Handle graceful shutdown
@@ -23,7 +23,8 @@ async function startServer() {
   try {
     await server.start();
   } catch (error) {
-    logger.error(`Failed to start MCP server: ${error.message}`);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    logger.error(`Failed to start MCP server: ${errorMessage}`);
     process.exit(1);
   }
 }

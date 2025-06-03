@@ -9,14 +9,31 @@ import { registerHelloMCPTools } from './tools/index.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+interface PackageJson {
+  version: string;
+  name?: string;
+  description?: string;
+}
+
+interface ServerOptions {
+  name: string;
+  version: string;
+}
+
 /**
  * Main MCP server class that integrates with Hello MCP
  */
 class HelloMCPServer {
+  private options: ServerOptions;
+  private server: FastMCP;
+  private initialized: boolean;
+
   constructor() {
     // Get version from package.json using synchronous fs
     const packagePath = path.join(__dirname, '../../package.json');
-    const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+    const packageJson: PackageJson = JSON.parse(
+      fs.readFileSync(packagePath, 'utf8')
+    );
 
     this.options = {
       name: 'Hello MCP Server',
@@ -33,15 +50,12 @@ class HelloMCPServer {
     this.init = this.init.bind(this);
     this.start = this.start.bind(this);
     this.stop = this.stop.bind(this);
-
-    // Setup logging
-    this.logger = logger;
   }
 
   /**
    * Initialize the MCP server with necessary tools and routes
    */
-  async init() {
+  async init(): Promise<HelloMCPServer | undefined> {
     if (this.initialized) return;
 
     // Register all Hello MCP tools
@@ -54,7 +68,7 @@ class HelloMCPServer {
   /**
    * Start the MCP server
    */
-  async start() {
+  async start(): Promise<HelloMCPServer> {
     if (!this.initialized) {
       await this.init();
     }
@@ -71,7 +85,7 @@ class HelloMCPServer {
   /**
    * Stop the MCP server
    */
-  async stop() {
+  async stop(): Promise<void> {
     if (this.server) {
       await this.server.stop();
     }

@@ -15,7 +15,7 @@
     "start:server": "node dist/mcp-server/src/index.js",
     "start:cli": "node bin/hello-mcp-cli.js",
     "hello-mcp": "tsx src/cli/index.ts",
-    "inspect": "npx fastmcp inspect mcp-server/server.js",
+    "inspect": "npx fastmcp inspect mcp-server/server.ts",
     "inspect:built": "npx fastmcp inspect dist/mcp-server/server.js",
     "test": "vitest",
     "lint": "eslint src/**/*.ts mcp-server/**/*.ts",

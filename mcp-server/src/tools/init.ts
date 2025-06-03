@@ -1,17 +1,18 @@
+import { FastMCP } from 'fastmcp';
 import { InitToolSchema } from '../../../dist/src/schemas/init.js';
 import { executeInitTool } from '../../../dist/src/core/tools/init.js';
 import logger from '../logger.js';
 
 /**
  * Register Init tool with MCP server
- * @param {Object} server - FastMCP server instance
+ * @param server - FastMCP server instance
  */
-export function registerInitTool(server) {
+export function registerInitTool(server: FastMCP): void {
   server.addTool({
     name: 'init',
     description: 'Hello MCP 프로젝트를 초기화합니다',
     parameters: InitToolSchema,
-    execute: async args => {
+    execute: async (args: unknown) => {
       try {
         logger.info('Init 도구 실행', args);
 

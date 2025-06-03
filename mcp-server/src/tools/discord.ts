@@ -1,18 +1,19 @@
+import { FastMCP } from 'fastmcp';
 import { DiscordToolSchema } from '../../../dist/src/schemas/discord.js';
 import { executeDiscordTool } from '../../../dist/src/core/tools/discord.js';
 import logger from '../logger.js';
 
 /**
  * Register Discord tool with MCP server
- * @param {Object} server - FastMCP server instance
+ * @param server - FastMCP server instance
  */
-export function registerDiscordTool(server) {
+export function registerDiscordTool(server: FastMCP): void {
   server.addTool({
     name: 'send_message_discord',
     description:
       'Discord로 메시지를 전송합니다 (DISCORD_WEBHOOK_URL 환경변수 필요)',
     parameters: DiscordToolSchema,
-    execute: async args => {
+    execute: async (args: unknown) => {
       try {
         logger.info('Discord 도구 실행', args);
 
