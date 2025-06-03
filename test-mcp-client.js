@@ -9,22 +9,22 @@ import { spawn } from 'child_process';
 
 async function testMCPClient() {
   console.log('🧪 MCP 클라이언트 테스트 시작...');
-  
+
   try {
     // MCP 서버 프로세스 시작
-    const serverProcess = spawn('npx', ['tsx', 'src/server/index.ts'], {
-      stdio: ['pipe', 'pipe', 'pipe']
+    const serverProcess = spawn('node', ['mcp-server/server.js'], {
+      stdio: ['pipe', 'pipe', 'pipe'],
     });
 
     let responseData = '';
-    
+
     // 서버 응답 수신
-    serverProcess.stdout.on('data', (data) => {
+    serverProcess.stdout.on('data', data => {
       responseData += data.toString();
       console.log('📨 서버 응답:', data.toString());
     });
 
-    serverProcess.stderr.on('data', (data) => {
+    serverProcess.stderr.on('data', data => {
       console.log('📝 서버 로그:', data.toString());
     });
 
@@ -39,13 +39,13 @@ async function testMCPClient() {
       params: {
         protocolVersion: '2024-11-05',
         capabilities: {
-          tools: {}
+          tools: {},
         },
         clientInfo: {
           name: 'test-client',
-          version: '1.0.0'
-        }
-      }
+          version: '1.0.0',
+        },
+      },
     };
 
     console.log('📤 초기화 요청 전송...');
@@ -59,7 +59,7 @@ async function testMCPClient() {
       jsonrpc: '2.0',
       id: 2,
       method: 'tools/list',
-      params: {}
+      params: {},
     };
 
     console.log('📤 도구 목록 요청 전송...');
@@ -70,9 +70,8 @@ async function testMCPClient() {
 
     // 프로세스 종료
     serverProcess.kill();
-    
+
     console.log('🎉 테스트 완료!');
-    
   } catch (error) {
     console.error('❌ 테스트 실패:', error);
   }

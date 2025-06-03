@@ -1,11 +1,6 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { createAddCommand, showAddExamples } from './commands/add';
-import {
-  createFetchWeatherCommand,
-  showFetchWeatherExamples,
-} from './commands/fetchWeather';
 import { createInitCommand, showInitExamples } from './commands/init';
 
 /**
@@ -19,12 +14,6 @@ function createCLI(): Command {
     .description('Hello Model Context Protocol (MCP) 서버 도구들을 위한 CLI')
     .version('1.0.0');
 
-  // Add 명령 추가
-  program.addCommand(createAddCommand());
-
-  // FetchWeather 명령 추가
-  program.addCommand(createFetchWeatherCommand());
-
   // Init 명령 추가
   program.addCommand(createInitCommand());
 
@@ -32,36 +21,23 @@ function createCLI(): Command {
   const examplesCommand = new Command('examples');
   examplesCommand
     .description('사용 예시를 보여줍니다')
-    .option(
-      '-c, --command <command>',
-      '특정 명령의 예시만 표시 (add|fetch-weather|init)'
-    )
+    .option('-c, --command <command>', '특정 명령의 예시만 표시 (init)')
     .action((options: { command?: string }) => {
       if (options.command) {
         switch (options.command) {
-          case 'add':
-            showAddExamples();
-            break;
-          case 'fetch-weather':
-            showFetchWeatherExamples();
-            break;
           case 'init':
             showInitExamples();
             break;
           default:
             console.error(`❌ 알 수 없는 명령: ${options.command}`);
-            console.log('사용 가능한 명령: add, fetch-weather, init');
+            console.log('사용 가능한 명령: init');
             process.exit(1);
         }
       } else {
         console.log('🛠️  MCP CLI 도구 사용 예시\n');
-        showAddExamples();
-        console.log('');
-        showFetchWeatherExamples();
-        console.log('');
         showInitExamples();
         console.log('\n더 자세한 정보는 각 명령에 --help 옵션을 사용하세요.');
-        console.log('예: mcp-tool add --help');
+        console.log('예: mcp-tool init --help');
       }
     });
 
@@ -71,8 +47,6 @@ function createCLI(): Command {
   program.on('--help', () => {
     console.log('');
     console.log('사용 예시:');
-    console.log('  $ mcp-tool add 5 3');
-    console.log('  $ mcp-tool fetch-weather Seoul');
     console.log('  $ mcp-tool init');
     console.log('  $ mcp-tool examples');
     console.log('');

@@ -2,8 +2,6 @@
  * tools/index.js
  * Export all Hello MCP tools for MCP server
  */
-import { registerAddTool } from './add.js';
-import { registerFetchWeatherTool } from './fetchWeather.js';
 import { registerInitTool } from './init.js';
 import logger from '../logger.js';
 
@@ -14,10 +12,8 @@ import logger from '../logger.js';
 export function registerHelloMCPTools(server) {
   try {
     // Register each tool
-    registerAddTool(server);
-    registerFetchWeatherTool(server);
     registerInitTool(server);
-    
+
     logger.info('All Hello MCP tools registered successfully');
   } catch (error) {
     logger.error(`Error registering Hello MCP tools: ${error.message}`);
@@ -26,5 +22,5 @@ export function registerHelloMCPTools(server) {
 }
 
 export default {
-  registerHelloMCPTools
+  registerHelloMCPTools,
 };

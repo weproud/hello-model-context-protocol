@@ -58,8 +58,6 @@ hello-model-context-protocol/
 ├── mcp-server/                  # 🆕 실제 MCP 서버 (FastMCP 기반)
 │   ├── src/                     # MCP 서버 소스 코드
 │   │   ├── tools/               # 도구 정의
-│   │   │   ├── add.js           # 예시 도구: 숫자 더하기
-│   │   │   ├── fetchWeather.js  # 예시 도구: 날씨 가져오기
 │   │   │   ├── init.js          # 예시 도구: 프로젝트 초기화
 │   │   │   └── index.js         # 모든 도구 등록
 │   │   ├── index.js             # MCP 서버 메인 클래스
@@ -67,21 +65,16 @@ hello-model-context-protocol/
 │   └── server.js                # MCP 서버 진입점
 ├── src/                         # 공유 소스 코드
 │   ├── schemas/                 # 🆕 도구별 스키마 정의
-│   │   ├── add.ts               # Add 도구 스키마
-│   │   ├── fetchWeather.ts      # FetchWeather 도구 스키마
 │   │   ├── init.ts              # Init 도구 스키마
 │   │   └── index.ts             # 모든 스키마 export
 │   ├── core/                    # 🆕 공유 유틸리티 및 비즈니스 로직
 │   │   ├── tools/               # 공통 비즈니스 로직
-│   │   │   ├── add.ts           # Add 도구 로직
-│   │   │   ├── fetchWeather.ts  # FetchWeather 도구 로직
 │   │   │   ├── init.ts          # Init 도구 로직
 │   │   │   └── index.ts         # 모든 도구 로직 export
 │   │   └── fetch.ts             # 공통 유틸리티 (Logger 등)
 │   ├── cli/                     # CLI 로직
 │   │   ├── commands/            # CLI 명령 핸들러
-│   │   │   ├── add.ts           # add 도구용 CLI 명령
-│   │   │   └── fetchWeather.ts  # fetchWeather 도구용 CLI 명령
+│   │   │   └── init.ts          # init 도구용 CLI 명령
 │   │   └── index.ts             # CLI 진입점
 │   └── types/                   # 공통 TypeScript 타입 정의
 ├── tests/                       # 테스트 코드
@@ -101,13 +94,13 @@ hello-model-context-protocol/
 #### 4.1 핵심 기능
 
 - MCP 서버:
-  - LLMs가 작업을 수행하기 위한 도구 (예: `add`, `fetchWeather`)를 노출합니다.
+  - LLMs가 작업을 수행하기 위한 도구 (예: `init`)를 노출합니다.
   - LLM 컨텍스트를 위한 자원 (예: 파일 내용, API 데이터)을 노출합니다.
   - 재사용 가능한 상호작용 템플릿을 위한 프롬프트를 지원합니다.
   - `stdio` (로컬) 및 `HTTP SSE` (원격) 전송 방식 모두를 지원합니다.
   - Claude Desktop 또는 Cursor와 같은 MCP 클라이언트와 통합됩니다.
 - CLI 도구:
-  - MCP 서버 도구를 미러링하는 명령 (예: `mcp-tool add`, `mcp-tool fetch-weather`)을 제공합니다.
+  - MCP 서버 도구를 미러링하는 명령 (예: `mcp-tool init`)을 제공합니다.
   - 일관성을 보장하기 위해 MCP 서버 도구와 동일한 로직을 공유합니다.
   - `Commander.js`를 통해 명령줄 인수 및 옵션을 지원합니다.
 - 인증: 원격 MCP 서버 액세스를 위한 OAuth 프록시를 지원합니다 (선택 사항).
@@ -129,9 +122,8 @@ hello-model-context-protocol/
 ### 구조
 
 ```
-src/lib/tools/
-├── add.ts              # Add 도구 핵심 비즈니스 로직
-├── weather.ts          # Weather 도구 핵심 비즈니스 로직
+src/core/tools/
+├── init.ts             # Init 도구 핵심 비즈니스 로직
 └── index.ts            # 모든 도구 로직 export
 ```
 
@@ -147,12 +139,12 @@ src/lib/tools/
 
 ```typescript
 // CLI에서 사용
-import { addNumbers } from '@/lib/tools';
-const result = addNumbers(5, 3);
+import { initProject } from '@/core/tools';
+const result = await initProject({ configPath: '.hellomcp' });
 
 // MCP 서버에서 사용
-import { executeAddTool } from '@/lib/tools';
-const result = executeAddTool({ a: 5, b: 3 });
+import { executeInitTool } from '@/core/tools';
+const result = executeInitTool({ configPath: '.hellomcp' });
 ```
 
 ## 🔍 MCP Inspector 사용법
@@ -201,7 +193,7 @@ npx fastmcp inspect dist/server/index.js
 ### MCP Inspector 사용 방법
 
 1. **서버 시작**: 위 명령어 중 하나를 실행하면 웹 브라우저가 자동으로 열립니다
-2. **도구 테스트**: 웹 UI에서 `add`, `fetchWeather` 도구를 직접 테스트할 수 있습니다
+2. **도구 테스트**: 웹 UI에서 `init` 도구를 직접 테스트할 수 있습니다
 3. **리소스 확인**: `logs://application` 리소스를 확인할 수 있습니다
 4. **실시간 디버깅**: 서버 로그와 요청/응답을 실시간으로 확인할 수 있습니다
 
@@ -215,20 +207,13 @@ npx fastmcp inspect dist/server/index.js
 
 ### 예시 테스트 시나리오
 
-#### Add 도구 테스트
+#### Init 도구 테스트
 
 1. MCP Inspector 실행
-2. "Tools" 탭에서 "add" 도구 선택
-3. 매개변수 입력: `{"a": 5, "b": 3}`
+2. "Tools" 탭에서 "init" 도구 선택
+3. 매개변수 입력: `{"configPath": ".hellomcp", "force": false}`
 4. "Execute" 버튼 클릭
-5. 결과 확인: `{"result": 8, "calculation": "5 + 3 = 8"}`
-
-#### FetchWeather 도구 테스트
-
-1. "Tools" 탭에서 "fetchWeather" 도구 선택
-2. 매개변수 입력: `{"location": "Seoul", "units": "celsius"}`
-3. "Execute" 버튼 클릭
-4. 결과 확인: 날씨 정보 JSON
+5. 결과 확인: 프로젝트 초기화 결과 JSON
 
 #### 로그 리소스 확인
 
@@ -242,8 +227,7 @@ npx fastmcp inspect dist/server/index.js
 #### 방법 1: npm 스크립트 사용 (권장)
 
 ```bash
-npm run mcp-tool -- add 5 3
-npm run mcp-tool -- fetch-weather Seoul --verbose
+npm run mcp-tool -- init --verbose
 npm run mcp-tool -- examples
 npm run mcp-tool -- --help
 ```
@@ -255,8 +239,7 @@ npm run mcp-tool -- --help
 chmod +x mcp-tool.sh
 
 # 사용
-./mcp-tool.sh add 5 3
-./mcp-tool.sh fetch-weather Seoul --verbose
+./mcp-tool.sh init --verbose
 ./mcp-tool.sh examples
 ./mcp-tool.sh --help
 ```
@@ -264,8 +247,7 @@ chmod +x mcp-tool.sh
 #### 방법 3: 직접 실행
 
 ```bash
-npx tsx src/cli/index.ts add 5 3
-npx tsx src/cli/index.ts fetch-weather Seoul --verbose
+npx tsx src/cli/index.ts init --verbose
 npx tsx src/cli/index.ts examples
 npx tsx src/cli/index.ts --help
 ```
@@ -277,50 +259,31 @@ npx tsx src/cli/index.ts --help
 npm link
 
 # 이후 어디서든 사용 가능
-mcp-tool add 5 3
-mcp-tool fetch-weather Seoul --verbose
+mcp-tool init --verbose
 mcp-tool examples
 mcp-tool --help
 ```
 
 ### CLI 명령 예시
 
-#### Add 명령
+#### Init 명령
 
 ```bash
 # 기본 사용법
-npm run mcp-tool -- add 10 5
-# 결과: 15
+npm run mcp-tool -- init
+# 결과: .hellomcp 디렉토리와 hello.yaml 파일 생성
 
 # 상세 출력
-npm run mcp-tool -- add 10.5 2.3 --verbose
+npm run mcp-tool -- init --verbose
 # 결과:
-# ✅ 계산 완료:
-#    입력: 10.5, 2.3
-#    결과: 12.8
-#    계산식: 10.5 + 2.3 = 12.8
-```
+# 🚀 MCP 프로젝트 초기화 완료:
+#    설정 디렉토리: .hellomcp
+#    생성된 파일: hello.yaml
+#    상태: 성공
 
-#### FetchWeather 명령
-
-```bash
-# 기본 사용법
-npm run mcp-tool -- fetch-weather Seoul
-# 결과: Seoul: 22°C, 맑음
-
-# 화씨 단위로 조회
-npm run mcp-tool -- fetch-weather "New York" --units fahrenheit
-# 결과: New York: 72°F, 맑음
-
-# 상세 출력
-npm run mcp-tool -- fetch-weather Tokyo --verbose
-# 결과:
-# 🌤️ 날씨 정보 조회 완료:
-#    위치: Tokyo
-#    온도: 22°C
-#    상태: 맑음
-#    습도: 65%
-#    단위: celsius
+# 강제 덮어쓰기
+npm run mcp-tool -- init --force
+# 결과: 기존 파일이 있어도 덮어쓰기
 ```
 
 #### Examples 명령
@@ -330,6 +293,5 @@ npm run mcp-tool -- fetch-weather Tokyo --verbose
 npm run mcp-tool -- examples
 
 # 특정 명령 예시만 보기
-npm run mcp-tool -- examples --command add
-npm run mcp-tool -- examples --command fetch-weather
+npm run mcp-tool -- examples --command init
 ```
