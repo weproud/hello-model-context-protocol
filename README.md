@@ -1,47 +1,43 @@
-Model Context Protocol (MCP) 서버 및 CLI 도구 개발 프로젝트
+# Hello Model Context Protocol (MCP)
 
-프로젝트 요구사항 문서 (PRD)
+A comprehensive MCP server and CLI toolkit built with Node.js, TypeScript, and FastMCP.
 
-최종 확정본
+## 📋 Overview
 
-이 문서는 Node.js, TypeScript, FastMCP를 사용하여 개발될 MCP 서버와 Commander.js를 사용한 CLI 도구 프로젝트의 최종 요구사항을 명시합니다.
+This project provides a complete implementation of a Model Context Protocol (MCP) server along with a corresponding CLI tool. The MCP server exposes tools, resources, and prompts for Large Language Models (LLMs) to interact with external systems, while the CLI tool mirrors the server's functionality for direct command-line usage.
 
----
+### Key Features
 
-### 1. 프로젝트 개요
+- **🚀 FastMCP-based Server**: Scalable MCP server built with Node.js and TypeScript
+- **🛠️ Rich Tool Set**: Multiple tools including project initialization, messaging, and more
+- **📱 CLI Interface**: Commander.js-based CLI that mirrors MCP server functionality
+- **🔒 Type Safety**: Full TypeScript support with Zod schema validation
+- **🧪 Testing**: Comprehensive testing with Vitest and Playwright
+- **🔍 Debugging**: Built-in MCP Inspector support for development
+- **📦 Single Package**: Unified package with multiple entry points
 
-#### 1.1 목적
+## 🛠️ Tech Stack
 
-이 PRD는 Node.js, TypeScript 및 FastMCP를 사용하여 구축될 Model Context Protocol (MCP) 서버의 설정 및 구조를 설명합니다. 이 서버는 거대 언어 모델(LLMs)이 외부 시스템과 상호작용하기 위한 도구(tools), 자원(resources) 및 프롬프트(prompts)를 노출합니다. `Commander.js`로 구축될 CLI 도구는 MCP 서버의 도구 기능을 복제하여 서버와 CLI 인터페이스 간의 일관성을 보장합니다.
+### Core Technologies
 
-#### 1.2 목표
+- **Runtime**: Node.js with FastMCP
+- **Language**: TypeScript
+- **Package Manager**: pnpm
+- **MCP Framework**: FastMCP (TypeScript)
+- **Schema Validation**: Zod
+- **CLI Framework**: Commander.js
+- **Linting & Formatting**: ESLint, Prettier
+- **Testing**: Vitest (unit/integration), Playwright (E2E)
+- **Transports**: Stdio (local), HTTP SSE (remote)
 
-- `Node.js` 및 `TypeScript`에서 `FastMCP`를 사용하여 확장 가능한 MCP 서버를 개발합니다.
-- LLM 통합을 위한 MCP 도구 (예: `add`, `fetchWeather`) 및 자원을 노출합니다.
-- MCP 서버 도구를 미러링하는 `Commander.js` 기반 CLI를 구현합니다.
-- `TypeScript`를 통한 타입 안전성 및 `Zod`를 통한 스키마 유효성 검사를 보장합니다.
-- MCP Inspector를 사용한 로컬 테스트 및 MCP 클라이언트 (예: Claude Desktop)와의 통합을 지원합니다.
-- `ESLint`, `Prettier`를 통한 코드 품질 유지 및 `Vitest`와 `Playwright`를 통한 테스트를 수행합니다.
+### Dependencies
 
-### 2. 기술 스택
-
-프로젝트는 다음과 같은 핵심 기술 스택을 사용합니다.
-
-- 프레임워크: `Node.js` with `FastMCP`
-- 언어: `TypeScript`
-- 패키지 관리자: `pnpm`
-- MCP 프레임워크: `FastMCP` (`TypeScript`)
-- 유효성 검사: `Zod` (도구 매개변수 스키마용)
-- CLI 도구: `Commander.js` (CLI 명령 구축용)
-- 린팅 & 포맷팅: `ESLint`, `Prettier`
-- 테스팅: `Vitest` (단위/통합), `Playwright` (E2E)
-- 전송 방식 (Transports): `Stdio` (로컬), `HTTP SSE` (원격)
-- 주요 의존성:
-  - `@modelcontextprotocol/sdk` (공식 MCP SDK)
-  - `fastmcp` (MCP용 TypeScript 프레임워크)
-  - `zod` (스키마 유효성 검사)
-  - `commander` (CLI 프레임워크)
-- 개발 의존성:
+- **Core**:
+  - `@modelcontextprotocol/sdk` - Official MCP SDK
+  - `fastmcp` - TypeScript MCP framework
+  - `zod` - Schema validation
+  - `commander` - CLI framework
+- **Development**:
   - `typescript`
   - `@types/node`
   - `vitest`
@@ -49,249 +45,495 @@ Model Context Protocol (MCP) 서버 및 CLI 도구 개발 프로젝트
   - `eslint`
   - `prettier`
 
-### 3. 프로젝트 패키지 구조
-
-본 프로젝트의 패키지 구조는 다음과 같습니다. 각 디렉토리와 파일은 프로젝트의 특정 기능 및 설정을 담당합니다.
+## 📁 Project Structure
 
 ```
 hello-model-context-protocol/
-├── mcp-server/                  # 🆕 실제 MCP 서버 (FastMCP 기반)
-│   ├── src/                     # MCP 서버 소스 코드
-│   │   ├── tools/               # 도구 정의
-│   │   │   ├── init.js          # 예시 도구: 프로젝트 초기화
-│   │   │   └── index.js         # 모든 도구 등록
-│   │   ├── index.js             # MCP 서버 메인 클래스
-│   │   └── logger.js            # 로깅 유틸리티
-│   └── server.js                # MCP 서버 진입점
-├── src/                         # 공유 소스 코드
-│   ├── schemas/                 # 🆕 도구별 스키마 정의
-│   │   ├── init.ts              # Init 도구 스키마
-│   │   └── index.ts             # 모든 스키마 export
-│   ├── core/                    # 🆕 공유 유틸리티 및 비즈니스 로직
-│   │   ├── tools/               # 공통 비즈니스 로직
-│   │   │   ├── init.ts          # Init 도구 로직
-│   │   │   └── index.ts         # 모든 도구 로직 export
-│   │   └── fetch.ts             # 공통 유틸리티 (Logger 등)
-│   ├── cli/                     # CLI 로직
-│   │   ├── commands/            # CLI 명령 핸들러
-│   │   │   └── init.ts          # init 도구용 CLI 명령
-│   │   └── index.ts             # CLI 진입점
-│   └── types/                   # 공통 TypeScript 타입 정의
-├── tests/                       # 테스트 코드
-│   ├── unit/                    # Vitest 단위 테스트
-│   └── e2e/                     # Playwright E2E 테스트
-├── .eslintrc.json               # ESLint 설정 파일
-├── .prettierrc                  # Prettier 설정 파일
-├── tsconfig.json                # TypeScript 설정 파일
-├── package.json                 # npm/pnpm 패키지 설정 파일
-├── vitest.config.ts             # Vitest 설정 파일
-├── playwright.config.ts         # Playwright 설정 파일
-└── README.md                    # 프로젝트 설명 파일
+├── mcp-server/                  # MCP Server (FastMCP-based)
+│   ├── src/                     # MCP server source code
+│   │   ├── tools/               # Tool definitions
+│   │   │   ├── init.ts          # Project initialization tool
+│   │   │   ├── greeting.ts      # Greeting management tool
+│   │   │   ├── slack.ts         # Slack messaging tool
+│   │   │   ├── discord.ts       # Discord messaging tool
+│   │   │   └── index.ts         # Tool registration
+│   │   ├── index.ts             # MCP server main class
+│   │   └── logger.ts            # Logging utilities
+│   └── server.ts                # MCP server entry point
+├── src/                         # Shared source code
+│   ├── schemas/                 # Tool-specific schema definitions
+│   │   ├── init.ts              # Init tool schema
+│   │   ├── greeting.ts          # Greeting tool schema
+│   │   ├── slack.ts             # Slack tool schema
+│   │   ├── discord.ts           # Discord tool schema
+│   │   └── index.ts             # Schema exports
+│   ├── core/                    # Shared utilities and business logic
+│   │   ├── tools/               # Common business logic
+│   │   │   ├── init.ts          # Init tool logic
+│   │   │   ├── greeting.ts      # Greeting tool logic
+│   │   │   ├── slack.ts         # Slack tool logic
+│   │   │   ├── discord.ts       # Discord tool logic
+│   │   │   └── index.ts         # Tool logic exports
+│   │   └── utils.ts             # Common utilities
+│   ├── cli/                     # CLI logic
+│   │   ├── commands/            # CLI command handlers
+│   │   │   ├── init.ts          # Init command
+│   │   │   ├── greeting.ts      # Greeting command
+│   │   │   ├── slack.ts         # Slack command
+│   │   │   └── discord.ts       # Discord command
+│   │   └── index.ts             # CLI entry point
+│   └── types/                   # Common TypeScript type definitions
+├── tests/                       # Test code
+│   ├── unit/                    # Vitest unit tests
+│   └── e2e/                     # Playwright E2E tests
+├── .eslintrc.json               # ESLint configuration
+├── .prettierrc                  # Prettier configuration
+├── tsconfig.json                # TypeScript configuration
+├── package.json                 # Package configuration
+├── vitest.config.ts             # Vitest configuration
+├── playwright.config.ts         # Playwright configuration
+└── README.md                    # Project documentation
 ```
 
-### 4. 기능 요구사항
+## 🚀 Getting Started
 
-#### 4.1 핵심 기능
+### Prerequisites
 
-- MCP 서버:
-  - LLMs가 작업을 수행하기 위한 도구 (예: `init`)를 노출합니다.
-  - LLM 컨텍스트를 위한 자원 (예: 파일 내용, API 데이터)을 노출합니다.
-  - 재사용 가능한 상호작용 템플릿을 위한 프롬프트를 지원합니다.
-  - `stdio` (로컬) 및 `HTTP SSE` (원격) 전송 방식 모두를 지원합니다.
-  - Claude Desktop 또는 Cursor와 같은 MCP 클라이언트와 통합됩니다.
-- CLI 도구:
-  - MCP 서버 도구를 미러링하는 명령 (예: `mcp-tool init`)을 제공합니다.
-  - 일관성을 보장하기 위해 MCP 서버 도구와 동일한 로직을 공유합니다.
-  - `Commander.js`를 통해 명령줄 인수 및 옵션을 지원합니다.
-- 인증: 원격 MCP 서버 액세스를 위한 OAuth 프록시를 지원합니다 (선택 사항).
-- 테스팅: `Vitest`를 사용한 도구 및 CLI 명령 단위 테스트, `Playwright`를 사용한 서버 및 CLI E2E 테스트를 포함합니다.
+- Node.js 18+
+- pnpm (recommended) or npm
 
-#### 4.2 비기능 요구사항
+### Installation
 
-- 성능: 낮은 지연 시간의 도구 실행 및 자원 검색을 위해 최적화합니다.
-- 확장성: 상태 저장 상호작용을 위한 세션 관리를 지원합니다.
-- 타입 안전성: 엄격한 타입 검사 및 스키마 유효성 검사를 위해 `TypeScript`와 `Zod`를 사용합니다.
-- 보안: 입력을 살균(sanitize)하고 자원에 대한 접근 제어를 구현합니다.
-- 코드 품질: `ESLint` 및 `Prettier` 규칙을 강제합니다.
-- 문서화: 서버 설정, CLI 사용법, 도구 정의에 대한 명확한 문서를 제공합니다.
+```bash
+# Clone the repository
+git clone https://github.com/weproud/hello-model-context-protocol.git
+cd hello-model-context-protocol
 
-## 🔄 공통 비즈니스 로직 아키텍처
+# Install dependencies
+pnpm install
 
-이 프로젝트는 **DRY(Don't Repeat Yourself) 원칙**을 따라 CLI와 MCP 서버에서 동일한 비즈니스 로직을 공유합니다.
+# Build the project
+pnpm build
+```
 
-### 구조
+### Quick Start
+
+#### 1. Run MCP Server
+
+```bash
+# Development mode (TypeScript)
+pnpm dev:server
+
+# Production mode (JavaScript)
+pnpm start:server
+```
+
+#### 2. Use CLI Tools
+
+```bash
+# Initialize a project
+pnpm hello-mcp init
+
+# Add a greeting
+pnpm hello-mcp greeting hello
+
+# Send Slack message (requires SLACK_WEBHOOK_URL)
+pnpm hello-mcp send-message-slack "Hello, World!"
+
+# Send Discord message (requires DISCORD_WEBHOOK_URL)
+pnpm hello-mcp send-message-discord "Hello, Discord!"
+```
+
+#### 3. Test with MCP Inspector
+
+```bash
+# Inspect the server
+pnpm inspect
+```
+
+## 🏗️ Architecture
+
+### Shared Business Logic
+
+This project follows the **DRY (Don't Repeat Yourself)** principle by sharing the same business logic between CLI and MCP server implementations.
+
+#### Structure
 
 ```
 src/core/tools/
-├── init.ts             # Init 도구 핵심 비즈니스 로직
-└── index.ts            # 모든 도구 로직 export
+├── init.ts             # Init tool core business logic
+├── greeting.ts         # Greeting tool core business logic
+├── slack.ts            # Slack tool core business logic
+├── discord.ts          # Discord tool core business logic
+└── index.ts            # All tool logic exports
 ```
 
-### 장점
+#### Benefits
 
-- **🚫 중복 제거**: CLI와 MCP 서버에서 동일한 로직을 재사용
-- **🔧 유지보수성**: 비즈니스 로직 변경 시 한 곳만 수정
-- **🧪 테스트 용이성**: 핵심 로직을 독립적으로 테스트 가능
-- **📏 일관성**: CLI와 MCP 서버의 동작이 항상 일치
-- **🔌 인터페이스 분리**: 비즈니스 로직과 인터페이스 로직 분리
+- **🚫 No Duplication**: Reuse identical logic in CLI and MCP server
+- **🔧 Maintainability**: Change business logic in one place only
+- **🧪 Testability**: Test core logic independently
+- **📏 Consistency**: CLI and MCP server behavior always match
+- **🔌 Interface Separation**: Separate business logic from interface logic
 
-### 사용 예시
+#### Usage Example
 
 ```typescript
-// CLI에서 사용
-import { initProject } from '@/core/tools';
-const result = await initProject({ configPath: '.hellomcp' });
-
-// MCP 서버에서 사용
+// CLI usage
 import { executeInitTool } from '@/core/tools';
-const result = executeInitTool({ configPath: '.hellomcp' });
+const result = await executeInitTool({ configPath: '.hellomcp' });
+
+// MCP server usage
+import { executeInitTool } from '@/core/tools';
+const result = await executeInitTool({ configPath: '.hellomcp' });
 ```
 
-## 🔍 MCP Inspector 사용법
+## 🔍 MCP Inspector Usage
 
-MCP Inspector는 MCP 서버를 웹 UI로 테스트하고 디버깅할 수 있는 공식 도구입니다.
+MCP Inspector is the official tool for testing and debugging MCP servers through a web UI.
 
-### MCP Inspector 실행
+### Running MCP Inspector
 
-#### 방법 1: npm 스크립트 사용 (권장)
+#### Method 1: npm scripts (Recommended)
 
 ```bash
-# TypeScript 소스 파일로 직접 실행
-npm run inspect
+# Run with TypeScript source files
+pnpm inspect
 
-# 빌드된 JavaScript 파일로 실행
-npm run build
-npm run inspect:built
+# Run with built JavaScript files
+pnpm build
+pnpm inspect:built
 ```
 
-#### 방법 2: 편리한 스크립트 사용
+#### Method 2: Direct FastMCP usage
 
 ```bash
-# 실행 권한 부여 (최초 1회)
-chmod +x scripts/inspect.sh
+# Run with TypeScript files
+npx fastmcp inspect mcp-server/server.ts
 
-# TypeScript 파일로 실행
-./scripts/inspect.sh
-
-# 빌드된 JavaScript 파일로 실행
-./scripts/inspect.sh --built
-
-# 도움말 보기
-./scripts/inspect.sh --help
+# Run with JavaScript files (after build)
+npx fastmcp inspect dist/mcp-server/server.js
 ```
 
-#### 방법 3: FastMCP 직접 사용
+### How to Use MCP Inspector
+
+1. **Start Server**: Run one of the commands above - a web browser will open automatically
+2. **Test Tools**: Test tools like `init`, `greeting`, `send_message_slack` directly in the web UI
+3. **Check Resources**: Explore available resources like `logs://application`
+4. **Real-time Debugging**: Monitor server logs and request/response in real-time
+
+### MCP Inspector Features
+
+- **🛠️ Tool Testing**: Execute each MCP tool directly in the web UI
+- **📊 Resource Exploration**: Browse server-provided resources
+- **🔍 Real-time Logs**: Monitor server operation status
+- **📝 Schema Validation**: Verify tool parameter schemas
+- **🚀 Rapid Prototyping**: Instantly test new tools during development
+
+### Example Test Scenarios
+
+#### Testing Init Tool
+
+1. Run MCP Inspector
+2. Select "init" tool in the "Tools" tab
+3. Enter parameters: `{"configPath": ".hellomcp", "force": false}`
+4. Click "Execute" button
+5. Review results: Project initialization result JSON
+
+#### Testing Messaging Tools
+
+1. Select "send_message_slack" tool
+2. Enter parameters: `{"message": "Hello from MCP!"}`
+3. Execute and check results (requires SLACK_WEBHOOK_URL in environment)
+
+## 🖥️ CLI Usage
+
+### Available Commands
+
+The CLI provides the same functionality as the MCP server tools, allowing direct command-line usage.
+
+#### Method 1: npm scripts (Recommended)
 
 ```bash
-# TypeScript 파일로 실행
-npx fastmcp inspect src/server/index.ts
+# Initialize project
+pnpm hello-mcp init
 
-# JavaScript 파일로 실행 (빌드 후)
-npx fastmcp inspect dist/server/index.js
+# Add greeting
+pnpm hello-mcp greeting hello
+
+# Send Slack message
+pnpm hello-mcp send-message-slack "Hello, World!"
+
+# Send Discord message
+pnpm hello-mcp send-message-discord "Hello, Discord!"
+
+# Show examples
+pnpm hello-mcp examples
+
+# Show help
+pnpm hello-mcp --help
 ```
 
-### MCP Inspector 사용 방법
-
-1. **서버 시작**: 위 명령어 중 하나를 실행하면 웹 브라우저가 자동으로 열립니다
-2. **도구 테스트**: 웹 UI에서 `init` 도구를 직접 테스트할 수 있습니다
-3. **리소스 확인**: `logs://application` 리소스를 확인할 수 있습니다
-4. **실시간 디버깅**: 서버 로그와 요청/응답을 실시간으로 확인할 수 있습니다
-
-### MCP Inspector 기능
-
-- **🛠️ 도구 테스트**: 각 MCP 도구를 웹 UI에서 직접 실행
-- **📊 리소스 탐색**: 서버에서 제공하는 리소스 확인
-- **🔍 실시간 로그**: 서버 동작 상태 모니터링
-- **📝 스키마 확인**: 도구 매개변수 스키마 검증
-- **🚀 빠른 프로토타이핑**: 새로운 도구 개발 시 즉시 테스트
-
-### 예시 테스트 시나리오
-
-#### Init 도구 테스트
-
-1. MCP Inspector 실행
-2. "Tools" 탭에서 "init" 도구 선택
-3. 매개변수 입력: `{"configPath": ".hellomcp", "force": false}`
-4. "Execute" 버튼 클릭
-5. 결과 확인: 프로젝트 초기화 결과 JSON
-
-#### 로그 리소스 확인
-
-1. "Resources" 탭에서 "logs://application" 선택
-2. 애플리케이션 로그 데이터 확인
-
-## 🖥️ CLI 사용법
-
-### 직접 `mcp-tool` 명령 사용하기
-
-#### 방법 1: npm 스크립트 사용 (권장)
+#### Method 2: Direct execution
 
 ```bash
-npm run mcp-tool -- init --verbose
-npm run mcp-tool -- examples
-npm run mcp-tool -- --help
-```
-
-#### 방법 2: bash 스크립트 사용
-
-```bash
-# 실행 권한 부여 (최초 1회)
-chmod +x mcp-tool.sh
-
-# 사용
-./mcp-tool.sh init --verbose
-./mcp-tool.sh examples
-./mcp-tool.sh --help
-```
-
-#### 방법 3: 직접 실행
-
-```bash
+# Using tsx directly
 npx tsx src/cli/index.ts init --verbose
+npx tsx src/cli/index.ts greeting hello
 npx tsx src/cli/index.ts examples
-npx tsx src/cli/index.ts --help
 ```
 
-#### 방법 4: 전역 설치 (선택사항)
+#### Method 3: Global installation (Optional)
 
 ```bash
-# 프로젝트를 전역으로 링크
-npm link
+# Link project globally
+pnpm link
 
-# 이후 어디서든 사용 가능
-mcp-tool init --verbose
-mcp-tool examples
-mcp-tool --help
+# Use anywhere
+hello-mcp init --verbose
+hello-mcp examples
+hello-mcp --help
 ```
 
-### CLI 명령 예시
+### Command Examples
 
-#### Init 명령
+#### Init Command
 
 ```bash
-# 기본 사용법
-npm run mcp-tool -- init
-# 결과: .hellomcp 디렉토리와 hello.yaml 파일 생성
+# Basic usage
+pnpm hello-mcp init
+# Result: Creates .hellomcp directory and hello.yaml file
 
-# 상세 출력
-npm run mcp-tool -- init --verbose
-# 결과:
-# 🚀 MCP 프로젝트 초기화 완료:
-#    설정 디렉토리: .hellomcp
-#    생성된 파일: hello.yaml
-#    상태: 성공
+# Verbose output
+pnpm hello-mcp init --verbose
+# Result: Detailed initialization information
 
-# 강제 덮어쓰기
-npm run mcp-tool -- init --force
-# 결과: 기존 파일이 있어도 덮어쓰기
+# Force overwrite
+pnpm hello-mcp init --force
+# Result: Overwrites existing files
 ```
 
-#### Examples 명령
+#### Greeting Command
 
 ```bash
-# 모든 예시 보기
-npm run mcp-tool -- examples
+# Add a greeting
+pnpm hello-mcp greeting hello
+# Result: Creates .hellomcp/hello-hello.yaml
 
-# 특정 명령 예시만 보기
-npm run mcp-tool -- examples --command init
+# Add greeting with spaces (converted to dashes)
+pnpm hello-mcp greeting "good morning"
+# Result: Creates .hellomcp/hello-good-morning.yaml
 ```
+
+#### Messaging Commands
+
+```bash
+# Send Slack message (requires SLACK_WEBHOOK_URL environment variable)
+SLACK_WEBHOOK_URL="your-webhook-url" pnpm hello-mcp send-message-slack "Hello from CLI!"
+
+# Send Discord message (requires DISCORD_WEBHOOK_URL environment variable)
+DISCORD_WEBHOOK_URL="your-webhook-url" pnpm hello-mcp send-message-discord "Hello from CLI!"
+```
+
+## 🔧 MCP Server Usage
+
+### Integration with MCP Clients
+
+#### Claude Desktop Integration
+
+Add the following configuration to your Claude Desktop MCP settings:
+
+**macOS**: `~/.claude/mcp_servers.json`
+**Windows**: `%APPDATA%\Claude\mcp_servers.json`
+**Linux**: `~/.config/claude/mcp_servers.json`
+
+```json
+{
+  "mcpServers": {
+    "hello-mcp": {
+      "command": "node",
+      "args": ["path/to/hello-model-context-protocol/mcp-server/server.js"],
+      "env": {
+        "SLACK_WEBHOOK_URL": "your-slack-webhook-url",
+        "DISCORD_WEBHOOK_URL": "your-discord-webhook-url"
+      }
+    }
+  }
+}
+```
+
+#### Cursor Integration
+
+Add to your Cursor MCP settings:
+
+**macOS**: `~/.cursor/mcp_servers.json`
+**Windows**: `%APPDATA%\Cursor\mcp_servers.json`
+**Linux**: `~/.config/cursor/mcp_servers.json`
+
+```json
+{
+  "mcpServers": {
+    "hello-mcp": {
+      "command": "node",
+      "args": ["path/to/hello-model-context-protocol/mcp-server/server.js"],
+      "env": {
+        "SLACK_WEBHOOK_URL": "your-slack-webhook-url",
+        "DISCORD_WEBHOOK_URL": "your-discord-webhook-url"
+      }
+    }
+  }
+}
+```
+
+### Available Tools
+
+The MCP server exposes the following tools:
+
+- **`init`**: Initialize a Hello MCP project (creates `.hellomcp` directory and `hello.yaml`)
+- **`greeting`**: Create greeting files (creates `hello-<name>.yaml` files)
+- **`send_message_slack`**: Send messages to Slack via webhook
+- **`send_message_discord`**: Send messages to Discord via webhook
+
+### Environment Variables
+
+Configure the following environment variables for messaging tools:
+
+```bash
+# Slack webhook URL for send_message_slack tool
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK
+
+# Discord webhook URL for send_message_discord tool
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR/DISCORD/WEBHOOK
+```
+
+## 🧪 Testing
+
+### Running Tests
+
+```bash
+# Run unit tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test:watch
+
+# Run E2E tests
+pnpm test:e2e
+
+# Run all tests with coverage
+pnpm test:coverage
+```
+
+### Test Structure
+
+- **Unit Tests**: Located in `tests/unit/` using Vitest
+- **E2E Tests**: Located in `tests/e2e/` using Playwright
+- **Integration Tests**: Test CLI and MCP server integration
+
+## 🛠️ Development
+
+### Development Scripts
+
+```bash
+# Start development server
+pnpm dev:server
+
+# Start CLI in development mode
+pnpm dev:cli
+
+# Build project
+pnpm build
+
+# Type checking
+pnpm type-check
+
+# Linting
+pnpm lint
+pnpm lint:fix
+
+# Formatting
+pnpm format
+pnpm format:check
+```
+
+### Adding New Tools
+
+1. **Create Schema**: Add schema definition in `src/schemas/`
+2. **Implement Logic**: Add business logic in `src/core/tools/`
+3. **Add MCP Tool**: Register tool in `mcp-server/src/tools/`
+4. **Add CLI Command**: Create CLI command in `src/cli/commands/`
+5. **Write Tests**: Add unit and integration tests
+6. **Update Documentation**: Update README and examples
+
+### Project Structure Guidelines
+
+- **Shared Logic**: Place reusable business logic in `src/core/`
+- **Schema Validation**: Use Zod schemas in `src/schemas/`
+- **Type Safety**: Maintain strict TypeScript types
+- **Testing**: Write tests for all new functionality
+- **Documentation**: Keep README and code comments updated
+
+## 📚 Examples
+
+### Using in Claude Desktop
+
+```
+User: "Initialize a new MCP project"
+Claude: Uses the init tool to create .hellomcp directory and hello.yaml
+
+User: "Add a greeting called 'welcome'"
+Claude: Uses the greeting tool to create hello-welcome.yaml
+
+User: "Send a message to Slack saying 'Hello team!'"
+Claude: Uses send_message_slack tool to send the message
+```
+
+### Using CLI
+
+```bash
+# Initialize project
+pnpm hello-mcp init
+
+# Add multiple greetings
+pnpm hello-mcp greeting hello
+pnpm hello-mcp greeting "good morning"
+pnpm hello-mcp greeting farewell
+
+# Send messages
+SLACK_WEBHOOK_URL="..." pnpm hello-mcp send-message-slack "Deployment complete!"
+DISCORD_WEBHOOK_URL="..." pnpm hello-mcp send-message-discord "Server is online!"
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes following the project structure guidelines
+4. Add tests for new functionality
+5. Run tests and linting: `pnpm test && pnpm lint`
+6. Commit your changes: `git commit -m 'Add amazing feature'`
+7. Push to the branch: `git push origin feature/amazing-feature`
+8. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🔗 Links
+
+- [Model Context Protocol](https://modelcontextprotocol.io/)
+- [FastMCP Documentation](https://github.com/jlowin/fastmcp)
+- [Claude Desktop](https://claude.ai/desktop)
+- [MCP Inspector](https://github.com/modelcontextprotocol/inspector)
+
+## 📞 Support
+
+If you encounter any issues or have questions:
+
+1. Check the [Issues](https://github.com/weproud/hello-model-context-protocol/issues) page
+2. Create a new issue with detailed information
+3. Join the discussion in the repository
+
+---
+
+**Happy coding with Model Context Protocol! 🚀**
