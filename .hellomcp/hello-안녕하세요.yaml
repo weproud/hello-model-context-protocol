@@ -1,0 +1,24 @@
+# Hello MCP Greeting Configuration
+name: "안녕하세요"
+fileName: "안녕하세요"
+type: "greeting"
+created: "2025-06-03T09:13:13.351Z"
+
+# Greeting Configuration
+greeting:
+  message: "Hello, 안녕하세요!"
+  language: "ko"
+  enabled: true
+
+# Metadata
+metadata:
+  description: "Greeting configuration for 안녕하세요"
+  version: "1.0.0"
+  tags:
+    - greeting
+    - 안녕하세요
+
+# Custom Settings
+settings:
+  showTimestamp: true
+  customMessage: ""

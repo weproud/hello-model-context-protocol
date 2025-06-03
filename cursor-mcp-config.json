@@ -1,10 +1,9 @@
 {
   "mcpServers": {
     "hello-mcp": {
-      "command": "npx",
+      "command": "node",
       "args": [
-        "tsx",
-        "/Users/raiiz/madeinnook/workspace/hello-model-context-protocol/src/server/index.ts"
+        "/Users/raiiz/madeinnook/workspace/hello-model-context-protocol/mcp-server/server.js"
       ],
       "env": {},
       "cwd": "/Users/raiiz/madeinnook/workspace/hello-model-context-protocol"

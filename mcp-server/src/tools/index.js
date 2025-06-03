@@ -3,6 +3,7 @@
  * Export all Hello MCP tools for MCP server
  */
 import { registerInitTool } from './init.js';
+import { registerGreetingTool } from './greeting.js';
 import logger from '../logger.js';
 
 /**
@@ -13,6 +14,7 @@ export function registerHelloMCPTools(server) {
   try {
     // Register each tool
     registerInitTool(server);
+    registerGreetingTool(server);
 
     logger.info('All Hello MCP tools registered successfully');
   } catch (error) {

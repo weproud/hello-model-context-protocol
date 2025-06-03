@@ -7,4 +7,11 @@ export {
   InitToolSchema,
   type InitToolInput,
   type InitToolResponse,
-} from './init';
+} from './init.js';
+
+// Greeting 도구 스키마
+export {
+  GreetingToolSchema,
+  type GreetingToolInput,
+  type GreetingToolResponse,
+} from './greeting.js';

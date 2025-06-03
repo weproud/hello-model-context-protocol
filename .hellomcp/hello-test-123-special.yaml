@@ -1,0 +1,24 @@
+# Hello MCP Greeting Configuration
+name: "test@123#special"
+fileName: "test-123-special"
+type: "greeting"
+created: "2025-06-03T09:12:23.382Z"
+
+# Greeting Configuration
+greeting:
+  message: "Hello, test@123#special!"
+  language: "ko"
+  enabled: true
+
+# Metadata
+metadata:
+  description: "Greeting configuration for test@123#special"
+  version: "1.0.0"
+  tags:
+    - greeting
+    - test-123-special
+
+# Custom Settings
+settings:
+  showTimestamp: true
+  customMessage: ""

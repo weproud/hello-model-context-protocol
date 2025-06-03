@@ -1,0 +1,23 @@
+# Hello MCP Greeting Configuration
+name: "welcome"
+type: "greeting"
+created: "2025-06-03T08:36:16.521Z"
+
+# Greeting Configuration
+greeting:
+  message: "Hello, welcome!"
+  language: "ko"
+  enabled: true
+
+# Metadata
+metadata:
+  description: "Greeting configuration for welcome"
+  version: "1.0.0"
+  tags:
+    - greeting
+    - welcome
+
+# Custom Settings
+settings:
+  showTimestamp: true
+  customMessage: ""

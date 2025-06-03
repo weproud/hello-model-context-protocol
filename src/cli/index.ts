@@ -2,6 +2,10 @@
 
 import { Command } from 'commander';
 import { createInitCommand, showInitExamples } from './commands/init';
+import {
+  createGreetingCommand,
+  showGreetingExamples,
+} from './commands/greeting';
 
 /**
  * MCP CLI 도구 메인 프로그램
@@ -17,27 +21,38 @@ function createCLI(): Command {
   // Init 명령 추가
   program.addCommand(createInitCommand());
 
+  // Greeting 명령 추가
+  program.addCommand(createGreetingCommand());
+
   // Examples 명령 추가
   const examplesCommand = new Command('examples');
   examplesCommand
     .description('사용 예시를 보여줍니다')
-    .option('-c, --command <command>', '특정 명령의 예시만 표시 (init)')
+    .option(
+      '-c, --command <command>',
+      '특정 명령의 예시만 표시 (init, greeting)'
+    )
     .action((options: { command?: string }) => {
       if (options.command) {
         switch (options.command) {
           case 'init':
             showInitExamples();
             break;
+          case 'greeting':
+            showGreetingExamples();
+            break;
           default:
             console.error(`❌ 알 수 없는 명령: ${options.command}`);
-            console.log('사용 가능한 명령: init');
+            console.log('사용 가능한 명령: init, greeting');
             process.exit(1);
         }
       } else {
         console.log('🛠️  MCP CLI 도구 사용 예시\n');
         showInitExamples();
+        console.log('');
+        showGreetingExamples();
         console.log('\n더 자세한 정보는 각 명령에 --help 옵션을 사용하세요.');
-        console.log('예: mcp-tool init --help');
+        console.log('예: mcp-tool init --help, mcp-tool greeting --help');
       }
     });
 
@@ -48,6 +63,7 @@ function createCLI(): Command {
     console.log('');
     console.log('사용 예시:');
     console.log('  $ mcp-tool init');
+    console.log('  $ mcp-tool greeting hi');
     console.log('  $ mcp-tool examples');
     console.log('');
     console.log('더 많은 예시를 보려면:');
